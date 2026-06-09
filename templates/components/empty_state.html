@@ -1,0 +1,27 @@
+{# Empty state component
+   Usage:
+     {% include "components/empty_state.html" with
+        icon="file-text"
+        title="No requests yet"
+        description="Submit your first tutor request to get started."
+        action_url="/requests/new/"
+        action_label="New Request"
+     %}
+#}
+<div class="ts-empty-state">
+  <div class="empty-icon">
+    <i data-lucide="{{ icon|default:'inbox' }}" class="w-7 h-7" style="color:var(--color-ink-faint)"></i>
+  </div>
+  <div>
+    <p class="empty-title">{{ title|default:"Nothing here yet" }}</p>
+    {% if description %}
+    <p class="empty-description">{{ description }}</p>
+    {% endif %}
+  </div>
+  {% if action_url and action_label %}
+  <a href="{{ action_url }}" class="ts-btn ts-btn-primary">
+    <i data-lucide="plus-circle" class="w-4 h-4"></i>
+    {{ action_label }}
+  </a>
+  {% endif %}
+</div>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}TutorSync{% endblock %} — TutorSync</title>
+  <meta name="description" content="{% block meta_description %}Centralized tutor management platform{% endblock %}">
+
+  {# Favicon #}
+  <link rel="icon" type="image/svg+xml" href="{% load static %}{% static 'img/favicon.svg' %}">
+
+  {# Fonts: Space Grotesk + JetBrains Mono #}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  {# Tailwind CSS via CDN (swap for compiled build in production) #}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              DEFAULT: '#2563EB',
+              50: '#EFF6FF', 100: '#DBEAFE', 200: '#BFDBFE',
+              300: '#93C5FD', 400: '#60A5FA', 500: '#3B82F6',
+              600: '#2563EB', 700: '#1D4ED8', 800: '#1E40AF', 900: '#1E3A8A',
+            },
+            accent: {
+              DEFAULT: '#7C3AED',
+              50: '#F5F3FF', 100: '#EDE9FE', 200: '#DDD6FE',
+              300: '#C4B5FD', 400: '#A78BFA', 500: '#8B5CF6',
+              600: '#7C3AED', 700: '#6D28D9', 800: '#5B21B6', 900: '#4C1D95',
+            },
+            ink: {
+              DEFAULT: '#0F1B33',
+              soft: '#1E293B', muted: '#475569', subtle: '#64748B', faint: '#94A3B8',
+            },
+          },
+          fontFamily: {
+            sans:    ['"Space Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+            mono:    ['"JetBrains Mono"', 'monospace'],
+          },
+          letterSpacing: { tight: '-0.02em', tighter: '-0.03em' },
+          boxShadow: {
+            card: '0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06)',
+            glow: '0 0 0 3px rgba(37,99,235,.15)',
+          },
+          backgroundImage: {
+            'gradient-brand': 'linear-gradient(135deg, #2563EB, #7C3AED)',
+          },
+          animation: {
+            'fade-in':   'fadeIn .2s ease-out',
+            'slide-down':'slideDown .25s cubic-bezier(.2,.7,.3,1)',
+            'slide-up':  'slideUp .25s cubic-bezier(.2,.7,.3,1)',
+          },
+          keyframes: {
+            fadeIn:    { from:{ opacity:'0' },                         to:{ opacity:'1' } },
+            slideDown: { from:{ opacity:'0',transform:'translateY(-6px)' }, to:{ opacity:'1',transform:'translateY(0)' } },
+            slideUp:   { from:{ opacity:'0',transform:'translateY(6px)' },  to:{ opacity:'1',transform:'translateY(0)' } },
+          },
+        },
+      },
+    }
+  </script>
+
+  {# Design tokens + component styles #}
+  <link rel="stylesheet" href="{% static 'css/design-tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+  {# Lucide Icons #}
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="h-full font-sans antialiased" style="background:var(--color-surface-1)">
+
+  {# Flash messages #}
+  {% if messages %}
+  <div class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full">
+    {% for message in messages %}
+    <div class="ts-flash ts-alert ts-alert-{% if message.tags == 'error' %}error{% elif message.tags == 'warning' %}warning{% elif message.tags == 'success' %}success{% else %}info{% endif %} shadow-lg animate-slide-down">
+      <i data-lucide="{% if message.tags == 'error' %}x-circle{% elif message.tags == 'warning' %}alert-triangle{% elif message.tags == 'success' %}check-circle{% else %}info{% endif %}" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+      <span class="flex-1 text-sm">{{ message }}</span>
+      <button class="ts-flash-close ts-btn ts-btn-ghost ts-btn-icon ts-btn-sm -mr-1 -mt-1 flex-shrink-0" aria-label="Dismiss">
+        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+      </button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% block body %}
+  {# Pages without the shell (login, register, apply) override this block #}
+  <div class="ts-shell">
+    {% include "components/sidebar.html" %}
+    <div id="ts-main" class="ts-main">
+      {% include "components/topbar.html" %}
+      <main class="ts-content">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+  {% endblock %}
+
+  {# App JS #}
+  <script src="{% static 'js/app.js' %}"></script>
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

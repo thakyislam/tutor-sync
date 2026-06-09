@@ -1,0 +1,52 @@
+{# Pagination component — expects Django Paginator page object as `page_obj`
+   Usage: {% include "components/pagination.html" with page_obj=page_obj %}
+#}
+{% if page_obj.has_other_pages %}
+<div class="flex items-center justify-between mt-6 flex-wrap gap-4">
+  <p class="text-sm" style="color:var(--color-ink-subtle)">
+    Showing <strong>{{ page_obj.start_index }}</strong>–<strong>{{ page_obj.end_index }}</strong>
+    of <strong>{{ page_obj.paginator.count }}</strong> results
+  </p>
+
+  <nav class="ts-pagination" aria-label="Pagination">
+    {# Previous #}
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="ts-page-btn" aria-label="Previous">
+      <i data-lucide="chevron-left" class="w-4 h-4"></i>
+    </a>
+    {% else %}
+    <span class="ts-page-btn disabled" aria-disabled="true">
+      <i data-lucide="chevron-left" class="w-4 h-4"></i>
+    </span>
+    {% endif %}
+
+    {# Page numbers #}
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <span class="ts-page-btn active" aria-current="page">{{ num }}</span>
+      {% elif num > page_obj.number|add:"-3" and num < page_obj.number|add:"3" %}
+        <a href="?page={{ num }}" class="ts-page-btn">{{ num }}</a>
+      {% elif num == 1 or num == page_obj.paginator.num_pages %}
+        {% if num == 1 and page_obj.number > 4 %}
+          <a href="?page=1" class="ts-page-btn">1</a>
+          <span class="ts-page-btn disabled" aria-hidden="true">…</span>
+        {% elif num == page_obj.paginator.num_pages and page_obj.number < page_obj.paginator.num_pages|add:"-3" %}
+          <span class="ts-page-btn disabled" aria-hidden="true">…</span>
+          <a href="?page={{ num }}" class="ts-page-btn">{{ num }}</a>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {# Next #}
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="ts-page-btn" aria-label="Next">
+      <i data-lucide="chevron-right" class="w-4 h-4"></i>
+    </a>
+    {% else %}
+    <span class="ts-page-btn disabled" aria-disabled="true">
+      <i data-lucide="chevron-right" class="w-4 h-4"></i>
+    </span>
+    {% endif %}
+  </nav>
+</div>
+{% endif %}

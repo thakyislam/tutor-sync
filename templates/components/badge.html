@@ -1,0 +1,29 @@
+{# Status badge component
+   Usage: {% include "components/badge.html" with status="pending" %}
+          {% include "components/badge.html" with status=object.status label=object.get_status_display %}
+#}
+{% with s=status|lower %}
+<span class="ts-badge
+  {% if s == 'pending' %}ts-badge-pending
+  {% elif s == 'under_review' or s == 'review' %}ts-badge-review
+  {% elif s == 'matched' or s == 'approved' or s == 'active' %}ts-badge-matched
+  {% elif s == 'rejected' or s == 'cancelled' %}ts-badge-rejected
+  {% elif s == 'closed' or s == 'inactive' %}ts-badge-closed
+  {% elif s == 'interview' %}ts-badge-interview
+  {% elif s == 'submitted' %}ts-badge-review
+  {% elif s == 'suspended' %}ts-badge-suspended
+  {% else %}ts-badge-closed
+  {% endif %}">
+  <span class="inline-block w-1.5 h-1.5 rounded-full
+    {% if s == 'pending' %}bg-yellow-500
+    {% elif s == 'under_review' or s == 'review' or s == 'submitted' %}bg-blue-500
+    {% elif s == 'matched' or s == 'approved' or s == 'active' %}bg-green-500
+    {% elif s == 'rejected' or s == 'cancelled' %}bg-red-500
+    {% elif s == 'closed' or s == 'inactive' %}bg-slate-400
+    {% elif s == 'interview' %}bg-purple-500
+    {% elif s == 'suspended' %}bg-amber-500
+    {% else %}bg-slate-400
+    {% endif %}"></span>
+  {{ label|default:status|title }}
+</span>
+{% endwith %}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none" role="img" aria-label="TutorSync icon">
+  <!-- Mono white version for dark/brand backgrounds -->
+  <path d="M24 16C18.5 11.8 11.5 10.8 5.5 12.6C4.6 12.9 4 13.7 4 14.6V35.2C4 36.5 5.2 37.4 6.4 37.1C11.6 35.8 17.8 36.8 24 41V16Z" fill="white" opacity="0.55"/>
+  <path d="M24 16C29.5 11.8 36.5 10.8 42.5 12.6C43.4 12.9 44 13.7 44 14.6V35.2C44 36.5 42.8 37.4 41.6 37.1C36.4 35.8 30.2 36.8 24 41V16Z" fill="white"/>
+  <circle cx="24" cy="9" r="4.4" fill="white"/>
+  <rect x="22.6" y="12" width="2.8" height="5" rx="1.4" fill="white" opacity="0.25"/>
+</svg>

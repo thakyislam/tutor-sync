@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 48 48" fill="none" role="img" aria-label="TutorSync">
+  <defs>
+    <linearGradient id="ts-fav" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+  <path d="M24 16C18.5 11.8 11.5 10.8 5.5 12.6C4.6 12.9 4 13.7 4 14.6V35.2C4 36.5 5.2 37.4 6.4 37.1C11.6 35.8 17.8 36.8 24 41V16Z" fill="url(#ts-fav)" opacity="0.9"/>
+  <path d="M24 16C29.5 11.8 36.5 10.8 42.5 12.6C43.4 12.9 44 13.7 44 14.6V35.2C44 36.5 42.8 37.4 41.6 37.1C36.4 35.8 30.2 36.8 24 41V16Z" fill="#7C3AED"/>
+  <circle cx="24" cy="9" r="4.4" fill="#2563EB"/>
+  <rect x="22.6" y="12" width="2.8" height="5" rx="1.4" fill="#0F1B33" opacity="0.25"/>
+</svg>

@@ -1,0 +1,103 @@
+{# Sidebar navigation component — include inside ts-shell #}
+<aside id="ts-sidebar" class="ts-sidebar">
+  {# Accent top bar #}
+  <div class="ts-accent-bar"></div>
+
+  {# Logo area #}
+  <div class="flex items-center px-5 h-16 border-b" style="border-color:var(--color-border)">
+    {% include "components/logo.html" with size="md" %}
+    <button id="ts-sidebar-toggle" class="ts-btn ts-btn-ghost ts-btn-icon ml-auto flex-shrink-0" aria-label="Toggle sidebar">
+      <i data-lucide="panel-left-close" class="w-4 h-4"></i>
+    </button>
+  </div>
+
+  {# Navigation #}
+  <nav class="flex-1 overflow-y-auto py-4 overflow-x-hidden">
+
+    {% if user.role == 'admin' or user.is_staff %}
+    {# ── Admin nav ───────────────────────────────────────── #}
+    <span class="ts-nav-section-label">Overview</span>
+    <a href="{% url 'dashboard' %}"         class="ts-nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <i data-lucide="layout-dashboard" class="w-4.5 h-4.5"></i>
+      <span class="nav-label">Dashboard</span>
+    </a>
+
+    <span class="ts-nav-section-label">Management</span>
+    <a href="{% url 'tutor_list' %}"         class="ts-nav-item {% if 'tutor' in request.resolver_match.url_name %}active{% endif %}">
+      <i data-lucide="graduation-cap" class="w-4.5 h-4.5"></i>
+      <span class="nav-label">Tutors</span>
+    </a>
+    <a href="{% url 'guardian_list' %}"      class="ts-nav-item {% if 'guardian' in request.resolver_match.url_name %}active{% endif %}">
+      <i data-lucide="users" class="w-4.5 h-4.5"></i>
+      <span class="nav-label">Guardians</span>
+    </a>
+    <a href="{% url 'request_list' %}"       class="ts-nav-item {% if 'request' in request.resolver_match.url_name %}active{% endif %}">
+      <i data-lucide="file-text" class="w-4.5 h-4.5"></i>
+      <span class="nav-label">Requests</span>
+    </a>
+    <a href="{% url 'application_list' %}"   class="ts-nav-item {% if 'application' in request.resolver_match.url_name %}active{% endif %}">
+      <i data-lucide="clipboard-list" class="w-4.5 h-4.5"></i>
+      <span class="nav-label">Applications</span>
+    </a>
+
+    {% elif user.role == 'tutor' %}
+    {# ── Tutor nav ───────────────────────────────────────── #}
+    <span class="ts-nav-section-label">My Account</span>
+    <a href="{% url 'dashboard' %}"          class="ts-nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <i data-lucide="layout-dashboard" class="w-4.5 h-4.5"></i>
+      <span class="nav-label">Dashboard</span>
+    </a>
+    <a href="{% url 'tutor_list' %}"          class="ts-nav-item {% if 'tutor' in request.resolver_match.url_name %}active{% endif %}">
+      <i data-lucide="graduation-cap" class="w-4.5 h-4.5"></i>
+      <span class="nav-label">Tutors</span>
+    </a>
+
+    {% elif user.role == 'guardian' %}
+    {# ── Guardian nav ─────────────────────────────────────── #}
+    <span class="ts-nav-section-label">My Account</span>
+    <a href="{% url 'dashboard' %}"           class="ts-nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <i data-lucide="layout-dashboard" class="w-4.5 h-4.5"></i>
+      <span class="nav-label">Dashboard</span>
+    </a>
+    <a href="{% url 'request_list' %}"        class="ts-nav-item {% if 'request' in request.resolver_match.url_name %}active{% endif %}">
+      <i data-lucide="file-text" class="w-4.5 h-4.5"></i>
+      <span class="nav-label">My Requests</span>
+    </a>
+    <a href="{% url 'tutor_list' %}"          class="ts-nav-item {% if 'tutor' in request.resolver_match.url_name %}active{% endif %}">
+      <i data-lucide="graduation-cap" class="w-4.5 h-4.5"></i>
+      <span class="nav-label">Find Tutors</span>
+    </a>
+    {% endif %}
+
+    {# Common bottom items #}
+    <div class="mt-auto pt-4">
+      <span class="ts-nav-section-label">Account</span>
+      <a href="{% url 'notifications' %}"     class="ts-nav-item {% if request.resolver_match.url_name == 'notifications' %}active{% endif %}">
+        <i data-lucide="bell" class="w-4.5 h-4.5"></i>
+        <span class="nav-label">Notifications</span>
+        {% if unread_count %}
+        <span class="ml-auto ts-badge ts-badge-matched text-xs">{{ unread_count }}</span>
+        {% endif %}
+      </a>
+      <a href="{% url 'profile' %}"           class="ts-nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+        <i data-lucide="user" class="w-4.5 h-4.5"></i>
+        <span class="nav-label">Profile</span>
+      </a>
+    </div>
+  </nav>
+
+  {# Sidebar footer #}
+  <div class="p-4 border-t" style="border-color:var(--color-border)">
+    <div class="flex items-center gap-3 overflow-hidden">
+      <div class="ts-avatar ts-avatar-sm flex-shrink-0">{{ user.get_full_name|first|default:user.username|first|upper }}</div>
+      <div class="nav-label min-w-0">
+        <p class="text-sm font-medium truncate" style="color:var(--color-ink)">{{ user.get_full_name|default:user.username }}</p>
+        <span class="ts-badge ts-role-{{ user.role }} text-xs">{{ user.role|title }}</span>
+      </div>
+    </div>
+    <a href="{% url 'logout' %}" class="ts-btn ts-btn-ghost mt-3 w-full justify-start nav-label" style="color:var(--color-ink-muted)">
+      <i data-lucide="log-out" class="w-4 h-4"></i>
+      Sign out
+    </a>
+  </div>
+</aside>

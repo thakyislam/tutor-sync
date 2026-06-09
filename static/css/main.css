@@ -1,0 +1,773 @@
+/* ============================================================
+   TutorSync — Main Stylesheet
+   Tailwind base + custom component layer
+   ============================================================ */
+
+@import './design-tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base Reset / Typography ─────────────────────────────── */
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    background-color: var(--color-surface-1);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: var(--letter-spacing-tight);
+    color: var(--color-ink);
+  }
+
+  code, pre, kbd, samp {
+    font-family: var(--font-mono);
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+}
+
+/* ── Component Layer ─────────────────────────────────────── */
+@layer components {
+
+  /* ── Logo ───────────────────────────────────────────────── */
+  .ts-logo-wordmark {
+    font-family: var(--font-display);
+    letter-spacing: var(--letter-spacing-tight);
+    line-height: 1;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: baseline;
+  }
+
+  .ts-logo-wordmark .ts-tutor {
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+
+  .ts-logo-wordmark .ts-sync {
+    font-weight: 300;
+    color: var(--color-accent);
+  }
+
+  /* ── Layout Shell ───────────────────────────────────────── */
+  .ts-shell {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--color-surface-1);
+  }
+
+  .ts-sidebar {
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    background: white;
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: var(--z-sticky);
+    transition: width var(--duration-normal) var(--ease-spring);
+    overflow-x: hidden;
+  }
+
+  .ts-sidebar.collapsed {
+    width: var(--sidebar-collapsed);
+  }
+
+  .ts-topbar {
+    height: var(--topbar-height);
+    background: white;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-6);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    gap: var(--space-4);
+  }
+
+  .ts-main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: margin-left var(--duration-normal) var(--ease-spring);
+  }
+
+  .ts-main.sidebar-collapsed {
+    margin-left: var(--sidebar-collapsed);
+  }
+
+  .ts-content {
+    padding: var(--space-6);
+    flex: 1;
+    max-width: var(--content-max-width);
+    width: 100%;
+  }
+
+  /* ── Cards ───────────────────────────────────────────────── */
+  .ts-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+
+  .ts-card-header {
+    padding: var(--space-5) var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+  }
+
+  .ts-card-body {
+    padding: var(--space-6);
+  }
+
+  .ts-stat-card {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--color-border);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .ts-stat-card .stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .ts-stat-card .stat-value {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    letter-spacing: var(--letter-spacing-tight);
+    color: var(--color-ink);
+    line-height: 1;
+  }
+
+  .ts-stat-card .stat-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-ink-subtle);
+    font-weight: 500;
+  }
+
+  /* ── Buttons ─────────────────────────────────────────────── */
+  .ts-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all var(--duration-fast) var(--ease-default);
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  .ts-btn:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .ts-btn-primary {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+  }
+
+  .ts-btn-primary:hover {
+    background: var(--color-primary-700);
+    border-color: var(--color-primary-700);
+    text-decoration: none;
+    color: white;
+  }
+
+  .ts-btn-secondary {
+    background: white;
+    color: var(--color-ink-soft);
+    border-color: var(--color-border);
+  }
+
+  .ts-btn-secondary:hover {
+    background: var(--color-surface-2);
+    border-color: var(--color-surface-3);
+    text-decoration: none;
+    color: var(--color-ink);
+  }
+
+  .ts-btn-accent {
+    background: var(--color-accent);
+    color: white;
+    border-color: var(--color-accent);
+  }
+
+  .ts-btn-accent:hover {
+    background: var(--color-accent-700);
+    border-color: var(--color-accent-700);
+    text-decoration: none;
+    color: white;
+  }
+
+  .ts-btn-ghost {
+    background: transparent;
+    color: var(--color-ink-muted);
+    border-color: transparent;
+  }
+
+  .ts-btn-ghost:hover {
+    background: var(--color-surface-2);
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  .ts-btn-danger {
+    background: #EF4444;
+    color: white;
+    border-color: #EF4444;
+  }
+
+  .ts-btn-danger:hover {
+    background: #DC2626;
+    border-color: #DC2626;
+    text-decoration: none;
+    color: white;
+  }
+
+  .ts-btn-sm {
+    padding: var(--space-1-5) var(--space-3);
+    font-size: var(--font-size-xs);
+    border-radius: var(--radius-md);
+  }
+
+  .ts-btn-lg {
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--font-size-base);
+    border-radius: var(--radius-xl);
+  }
+
+  .ts-btn-icon {
+    padding: var(--space-2);
+    width: 36px;
+    height: 36px;
+  }
+
+  .ts-btn-icon.ts-btn-sm {
+    width: 28px;
+    height: 28px;
+    padding: var(--space-1);
+  }
+
+  /* ── Gradient button ─────────────────────────────────────── */
+  .ts-btn-brand {
+    background: var(--gradient-brand);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.30);
+  }
+
+  .ts-btn-brand:hover {
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.40);
+    filter: brightness(1.05);
+    text-decoration: none;
+    color: white;
+  }
+
+  /* ── Status Badges ───────────────────────────────────────── */
+  .ts-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-0-5) var(--space-2);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+  }
+
+  .ts-badge-pending {
+    background: #FEF9C3;
+    color: #854D0E;
+  }
+
+  .ts-badge-review {
+    background: var(--color-primary-100);
+    color: var(--color-primary-800);
+  }
+
+  .ts-badge-matched,
+  .ts-badge-approved {
+    background: #DCFCE7;
+    color: #166534;
+  }
+
+  .ts-badge-rejected,
+  .ts-badge-cancelled {
+    background: #FEE2E2;
+    color: #991B1B;
+  }
+
+  .ts-badge-closed {
+    background: var(--color-surface-2);
+    color: var(--color-ink-muted);
+  }
+
+  .ts-badge-interview {
+    background: var(--color-accent-100);
+    color: var(--color-accent-800);
+  }
+
+  .ts-badge-active {
+    background: #DCFCE7;
+    color: #166534;
+  }
+
+  .ts-badge-inactive {
+    background: var(--color-surface-2);
+    color: var(--color-ink-muted);
+  }
+
+  .ts-badge-suspended {
+    background: #FEF3C7;
+    color: #92400E;
+  }
+
+  /* ── Sidebar Navigation ──────────────────────────────────── */
+  .ts-nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2-5) var(--space-4);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-ink-muted);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-default);
+    text-decoration: none;
+    margin: var(--space-0-5) var(--space-3);
+    white-space: nowrap;
+  }
+
+  .ts-nav-item:hover {
+    background: var(--color-surface-2);
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  .ts-nav-item.active {
+    background: var(--color-primary-100);
+    color: var(--color-primary);
+  }
+
+  .ts-nav-item.active svg {
+    color: var(--color-primary);
+  }
+
+  .ts-nav-item svg {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    color: var(--color-ink-faint);
+    transition: color var(--duration-fast) var(--ease-default);
+  }
+
+  .ts-nav-item:hover svg {
+    color: var(--color-ink-subtle);
+  }
+
+  .ts-nav-section-label {
+    font-size: var(--font-size-2xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--color-ink-faint);
+    padding: var(--space-4) var(--space-6) var(--space-1);
+  }
+
+  /* ── Tables ──────────────────────────────────────────────── */
+  .ts-table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--color-border);
+  }
+
+  .ts-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+    background: white;
+  }
+
+  .ts-table thead {
+    background: var(--color-surface-1);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ts-table th {
+    padding: var(--space-3) var(--space-4);
+    text-align: left;
+    font-weight: 600;
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--color-ink-subtle);
+    white-space: nowrap;
+  }
+
+  .ts-table td {
+    padding: var(--space-3) var(--space-4);
+    color: var(--color-ink-soft);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ts-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .ts-table tbody tr:hover {
+    background: var(--color-surface-1);
+  }
+
+  /* ── Forms ───────────────────────────────────────────────── */
+  .ts-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1-5);
+  }
+
+  .ts-label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-ink-soft);
+  }
+
+  .ts-label.required::after {
+    content: ' *';
+    color: #EF4444;
+  }
+
+  .ts-input,
+  .ts-select,
+  .ts-textarea {
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    color: var(--color-ink);
+    background: white;
+    transition: border-color var(--duration-fast) var(--ease-default),
+                box-shadow var(--duration-fast) var(--ease-default);
+    outline: none;
+  }
+
+  .ts-input:focus,
+  .ts-select:focus,
+  .ts-textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .ts-input::placeholder,
+  .ts-textarea::placeholder {
+    color: var(--color-ink-faint);
+  }
+
+  .ts-field-error {
+    font-size: var(--font-size-xs);
+    color: #DC2626;
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .ts-field-hint {
+    font-size: var(--font-size-xs);
+    color: var(--color-ink-subtle);
+  }
+
+  /* ── Notifications Bell ──────────────────────────────────── */
+  .ts-notif-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: var(--radius-full);
+    background: #EF4444;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+    line-height: 1;
+  }
+
+  /* ── Avatar ──────────────────────────────────────────────── */
+  .ts-avatar {
+    border-radius: var(--radius-full);
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--gradient-brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: white;
+  }
+
+  .ts-avatar-sm  { width: 28px; height: 28px; font-size: var(--font-size-xs); }
+  .ts-avatar-md  { width: 36px; height: 36px; font-size: var(--font-size-sm); }
+  .ts-avatar-lg  { width: 48px; height: 48px; font-size: var(--font-size-base); }
+  .ts-avatar-xl  { width: 72px; height: 72px; font-size: var(--font-size-xl); }
+
+  /* ── Role Badge ──────────────────────────────────────────── */
+  .ts-role-admin    { background: var(--color-primary-100);  color: var(--color-primary-800); }
+  .ts-role-tutor    { background: var(--color-accent-100);   color: var(--color-accent-800);  }
+  .ts-role-guardian { background: #D1FAE5;                   color: #065F46;                  }
+
+  /* ── Empty State ─────────────────────────────────────────── */
+  .ts-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-16) var(--space-8);
+    text-align: center;
+    gap: var(--space-4);
+  }
+
+  .ts-empty-state .empty-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-2xl);
+    background: var(--gradient-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink-faint);
+  }
+
+  .ts-empty-state .empty-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-ink);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  .ts-empty-state .empty-description {
+    font-size: var(--font-size-sm);
+    color: var(--color-ink-muted);
+    max-width: 380px;
+    line-height: var(--line-height-relaxed);
+  }
+
+  /* ── Breadcrumb ──────────────────────────────────────────── */
+  .ts-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-ink-subtle);
+  }
+
+  .ts-breadcrumb a {
+    color: var(--color-ink-subtle);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-default);
+  }
+
+  .ts-breadcrumb a:hover {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .ts-breadcrumb .separator {
+    color: var(--color-ink-faint);
+    font-size: var(--font-size-xs);
+  }
+
+  .ts-breadcrumb .current {
+    color: var(--color-ink-soft);
+    font-weight: 500;
+  }
+
+  /* ── Pagination ──────────────────────────────────────────── */
+  .ts-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: between;
+    gap: var(--space-1);
+    flex-wrap: wrap;
+  }
+
+  .ts-page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-ink-muted);
+    background: white;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all var(--duration-fast) var(--ease-default);
+  }
+
+  .ts-page-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .ts-page-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+  }
+
+  .ts-page-btn:disabled,
+  .ts-page-btn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* ── Section Page Header ─────────────────────────────────── */
+  .ts-page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    flex-wrap: wrap;
+  }
+
+  .ts-page-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    letter-spacing: var(--letter-spacing-tight);
+    color: var(--color-ink);
+    line-height: var(--line-height-tight);
+  }
+
+  .ts-page-subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--color-ink-muted);
+    margin-top: var(--space-1);
+  }
+
+  /* ── Dividers ────────────────────────────────────────────── */
+  .ts-divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: var(--space-6) 0;
+  }
+
+  /* ── Alert / Toast Banners ───────────────────────────────── */
+  .ts-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-sm);
+    border: 1px solid;
+  }
+
+  .ts-alert-info    { background: var(--color-primary-50);  border-color: var(--color-primary-200);  color: var(--color-primary-800);  }
+  .ts-alert-success { background: #F0FDF4; border-color: #BBF7D0; color: #166534; }
+  .ts-alert-warning { background: #FFFBEB; border-color: #FDE68A; color: #92400E; }
+  .ts-alert-error   { background: #FFF1F2; border-color: #FECDD3; color: #9F1239; }
+
+  /* ── Gradient Accent Line (top of sidebar / cards) ───────── */
+  .ts-accent-bar {
+    height: 3px;
+    background: var(--gradient-brand);
+    border-radius: var(--radius-full);
+  }
+}
+
+/* ── Utility Layer ───────────────────────────────────────── */
+@layer utilities {
+  .text-gradient-brand {
+    background: var(--gradient-brand);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-gradient-brand {
+    background: var(--gradient-brand);
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .shadow-glow-accent {
+    box-shadow: var(--shadow-glow-accent);
+  }
+
+  .shadow-app-icon {
+    box-shadow: var(--shadow-app-icon);
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .tracking-tight {
+    letter-spacing: var(--letter-spacing-tight);
+  }
+}

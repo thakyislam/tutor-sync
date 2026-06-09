@@ -1,0 +1,86 @@
+{# Topbar component — include inside ts-main #}
+<header class="ts-topbar">
+  {# Breadcrumb #}
+  <nav class="ts-breadcrumb flex-1" aria-label="Breadcrumb">
+    {% block breadcrumb %}
+    <a href="{% url 'dashboard' %}">
+      <i data-lucide="home" class="w-3.5 h-3.5 inline-block -mt-0.5"></i>
+    </a>
+    {% endblock %}
+  </nav>
+
+  {# Right-side controls #}
+  <div class="flex items-center gap-2">
+
+    {# Notification bell #}
+    <div class="relative">
+      <button id="ts-notif-btn" class="ts-btn ts-btn-ghost ts-btn-icon relative" aria-label="Notifications">
+        <i data-lucide="bell" class="w-4.5 h-4.5"></i>
+        {% if unread_count %}
+        <span class="ts-notif-badge">{{ unread_count }}</span>
+        {% endif %}
+      </button>
+
+      {# Notification dropdown #}
+      <div id="ts-notif-dropdown" class="hidden absolute right-0 mt-2 w-80 ts-card z-50 animate-slide-down" style="top:100%">
+        <div class="ts-card-header">
+          <span class="text-sm font-semibold" style="color:var(--color-ink)">Notifications</span>
+          {% if unread_count %}
+          <a href="{% url 'notifications' %}" class="text-xs" style="color:var(--color-primary)">Mark all read</a>
+          {% endif %}
+        </div>
+        <div class="divide-y" style="border-color:var(--color-border);max-height:320px;overflow-y:auto">
+          {% for notif in recent_notifications %}
+          <a href="{{ notif.link|default:'#' }}" class="flex gap-3 px-4 py-3 hover:bg-slate-50 transition-colors {% if not notif.is_read %}bg-blue-50{% endif %}" style="text-decoration:none">
+            <div class="w-2 h-2 rounded-full mt-1.5 flex-shrink-0 {% if not notif.is_read %}bg-blue-500{% else %}bg-transparent{% endif %}"></div>
+            <div class="min-w-0">
+              <p class="text-sm font-medium truncate" style="color:var(--color-ink)">{{ notif.title }}</p>
+              <p class="text-xs truncate" style="color:var(--color-ink-muted)">{{ notif.message }}</p>
+              <p class="text-xs mt-0.5" style="color:var(--color-ink-faint)">{{ notif.created_at|timesince }} ago</p>
+            </div>
+          </a>
+          {% empty %}
+          <div class="px-4 py-8 text-center text-sm" style="color:var(--color-ink-muted)">
+            <i data-lucide="bell-off" class="w-8 h-8 mx-auto mb-2" style="color:var(--color-ink-faint)"></i>
+            No notifications
+          </div>
+          {% endfor %}
+        </div>
+        {% if recent_notifications %}
+        <div class="ts-card-header" style="justify-content:center;padding:var(--space-3)">
+          <a href="{% url 'notifications' %}" class="text-sm font-medium" style="color:var(--color-primary)">View all notifications</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {# User menu #}
+    <div class="relative">
+      <button id="ts-user-menu-btn" class="flex items-center gap-2 ts-btn ts-btn-ghost px-2" aria-label="User menu">
+        <div class="ts-avatar ts-avatar-sm">{{ user.get_full_name|first|default:user.username|first|upper }}</div>
+        <span class="hidden md:block text-sm font-medium" style="color:var(--color-ink)">{{ user.get_full_name|default:user.username }}</span>
+        <i data-lucide="chevron-down" class="w-3.5 h-3.5 hidden md:block" style="color:var(--color-ink-faint)"></i>
+      </button>
+
+      <div id="ts-user-menu" class="hidden absolute right-0 mt-2 w-56 ts-card z-50 animate-slide-down" style="top:100%">
+        <div class="px-4 py-3 border-b" style="border-color:var(--color-border)">
+          <p class="text-sm font-semibold" style="color:var(--color-ink)">{{ user.get_full_name|default:user.username }}</p>
+          <p class="text-xs" style="color:var(--color-ink-muted)">{{ user.email }}</p>
+        </div>
+        <div class="p-1">
+          <a href="{% url 'profile' %}" class="ts-nav-item" style="margin:2px 4px">
+            <i data-lucide="user" class="w-4 h-4"></i> Profile
+          </a>
+          <a href="{% url 'password_change' %}" class="ts-nav-item" style="margin:2px 4px">
+            <i data-lucide="lock" class="w-4 h-4"></i> Change password
+          </a>
+          <hr class="my-1" style="border-color:var(--color-border)">
+          <a href="{% url 'logout' %}" class="ts-nav-item" style="margin:2px 4px;color:#EF4444">
+            <i data-lucide="log-out" class="w-4 h-4"></i> Sign out
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</header>

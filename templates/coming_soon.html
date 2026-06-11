@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="ts-empty-state">
+  <div class="empty-icon">
+    <i data-lucide="construction" class="w-7 h-7"></i>
+  </div>
+  <p class="empty-title">{{ page_title }} — Coming Soon</p>
+  <p class="empty-description">This section is under construction and will be available in a future update.</p>
+</div>
+{% endblock %}

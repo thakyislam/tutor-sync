@@ -2,7 +2,26 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:api.anthropic.com)",
-      "PowerShell(New-Item *)"
+      "PowerShell(New-Item *)",
+      "Bash(pip show *)",
+      "Bash(pip list *)",
+      "Bash(pip install *)",
+      "Bash(django-admin startproject *)",
+      "Bash(python manage.py startapp accounts)",
+      "Bash(python manage.py startapp tutors)",
+      "Bash(python manage.py startapp guardians)",
+      "Bash(python manage.py startapp core)",
+      "Bash(python manage.py startapp dashboard)",
+      "Bash(mkdir requests *)",
+      "Bash(touch requests/__init__.py requests/apps.py requests/models.py requests/views.py requests/urls.py requests/forms.py requests/admin.py)",
+      "Bash(python manage.py check)",
+      "Bash(python manage.py makemigrations accounts core tutors guardians requests)",
+      "Bash(python manage.py makemigrations accounts core tutors guardians tutor_requests)",
+      "Bash(python manage.py migrate)",
+      "Bash(python manage.py createsuperuser --username admin --email admin@tutorsync.local --noinput)",
+      "Bash(python -c ' *)",
+      "Bash(timeout 5 python manage.py runserver)",
+      "Bash(python manage.py shell -c ' *)"
     ]
   }
 }

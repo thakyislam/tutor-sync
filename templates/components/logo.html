@@ -1,10 +1,11 @@
-{# Reusable TutorSync logo component
-   Usage:
-     {% include "components/logo.html" %}
-     {% include "components/logo.html" with size="sm" %}         {# sm / md / lg #}
-     {% include "components/logo.html" with variant="white" %}   {# default / white #}
-     {% include "components/logo.html" with stacked=True %}
-#}
+{% comment %}
+Reusable TutorSync logo component
+Usage:
+  {% include "components/logo.html" %}
+  {% include "components/logo.html" with size="sm" %}
+  {% include "components/logo.html" with variant="white" %}
+  {% include "components/logo.html" with stacked=True %}
+{% endcomment %}
 {% with size=size|default:"md" variant=variant|default:"default" %}
 
 {% if stacked %}

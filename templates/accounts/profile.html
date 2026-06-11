@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-6">
+
+  <div>
+    <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">My Profile</h1>
+    <p class="text-sm mt-1" style="color:var(--color-ink-muted)">Manage your personal information</p>
+  </div>
+
+  {# Avatar + role card #}
+  <div class="ts-card ts-card-body flex items-center gap-4">
+    {% if request.user.avatar %}
+    <img src="{{ request.user.avatar.url }}" alt="Avatar"
+         class="w-16 h-16 rounded-full object-cover border-2 flex-shrink-0" style="border-color:var(--color-border)">
+    {% else %}
+    <div class="ts-avatar w-16 h-16 text-2xl flex-shrink-0">
+      {{ request.user.get_full_name|first|default:request.user.username|first|upper }}
+    </div>
+    {% endif %}
+    <div>
+      <p class="font-semibold text-lg" style="color:var(--color-ink)">
+        {{ request.user.get_full_name|default:request.user.username }}
+      </p>
+      <p class="text-sm mb-1" style="color:var(--color-ink-muted)">{{ request.user.email }}</p>
+      <span class="ts-badge ts-role-{{ request.user.role }}">{{ request.user.role|title }}</span>
+    </div>
+  </div>
+
+  {# Edit form #}
+  <div class="ts-card">
+    <div class="ts-card-header">
+      <h2 class="font-semibold" style="color:var(--color-ink)">Edit information</h2>
+    </div>
+    <div class="ts-card-body">
+      <form method="post" enctype="multipart/form-data" class="space-y-4">
+        {% csrf_token %}
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="ts-form-group">
+            <label class="ts-label">First name</label>
+            {{ form.first_name }}
+          </div>
+          <div class="ts-form-group">
+            <label class="ts-label">Last name</label>
+            {{ form.last_name }}
+          </div>
+        </div>
+
+        <div class="ts-form-group">
+          <label class="ts-label">Phone</label>
+          <div class="ts-input-wrapper">
+            <i data-lucide="phone" class="ts-input-icon w-4 h-4"></i>
+            {{ form.phone }}
+          </div>
+        </div>
+
+        <div class="ts-form-group">
+          <label class="ts-label">Profile picture</label>
+          {{ form.avatar }}
+        </div>
+
+        <div class="flex items-center gap-3 pt-2">
+          <button type="submit" class="ts-btn ts-btn-primary">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            Save changes
+          </button>
+          <a href="{% url 'password_change' %}" class="ts-btn ts-btn-ghost">
+            <i data-lucide="lock" class="w-4 h-4"></i>
+            Change password
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

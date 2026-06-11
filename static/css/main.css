@@ -529,6 +529,21 @@
     color: var(--color-ink-subtle);
   }
 
+  /* Icon-prefix input wrapper */
+  .ts-input-wrapper {
+    position: relative;
+  }
+
+  .ts-input-icon {
+    position: absolute;
+    left: var(--space-3);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-ink-faint);
+    pointer-events: none;
+    flex-shrink: 0;
+  }
+
   /* ── Notifications Bell ──────────────────────────────────── */
   .ts-notif-badge {
     position: absolute;

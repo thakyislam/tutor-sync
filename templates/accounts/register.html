@@ -1,0 +1,80 @@
+{% extends "base_auth.html" %}
+{% block title %}Create Account{% endblock %}
+
+{% block auth_content %}
+<div class="mb-8">
+  <h1 class="text-2xl font-bold tracking-tight mb-1" style="color:var(--color-ink)">Create your account</h1>
+  <p class="text-sm" style="color:var(--color-ink-muted)">Register as a guardian to submit tutor requests</p>
+</div>
+
+<form method="post" class="space-y-4">
+  {% csrf_token %}
+
+  <div class="grid grid-cols-2 gap-3">
+    <div class="ts-form-group">
+      <label class="ts-label">First name</label>
+      {{ form.first_name }}
+      {% if form.first_name.errors %}<p class="ts-field-error">{{ form.first_name.errors.0 }}</p>{% endif %}
+    </div>
+    <div class="ts-form-group">
+      <label class="ts-label">Last name</label>
+      {{ form.last_name }}
+      {% if form.last_name.errors %}<p class="ts-field-error">{{ form.last_name.errors.0 }}</p>{% endif %}
+    </div>
+  </div>
+
+  <div class="ts-form-group">
+    <label class="ts-label">Username</label>
+    <div class="ts-input-wrapper">
+      <i data-lucide="user" class="ts-input-icon w-4 h-4"></i>
+      {{ form.username }}
+    </div>
+    {% if form.username.errors %}<p class="ts-field-error">{{ form.username.errors.0 }}</p>{% endif %}
+  </div>
+
+  <div class="ts-form-group">
+    <label class="ts-label">Email</label>
+    <div class="ts-input-wrapper">
+      <i data-lucide="mail" class="ts-input-icon w-4 h-4"></i>
+      {{ form.email }}
+    </div>
+    {% if form.email.errors %}<p class="ts-field-error">{{ form.email.errors.0 }}</p>{% endif %}
+  </div>
+
+  <div class="ts-form-group">
+    <label class="ts-label">Phone <span class="text-xs" style="color:var(--color-ink-faint)">(optional)</span></label>
+    <div class="ts-input-wrapper">
+      <i data-lucide="phone" class="ts-input-icon w-4 h-4"></i>
+      {{ form.phone }}
+    </div>
+  </div>
+
+  <div class="ts-form-group">
+    <label class="ts-label">Password</label>
+    <div class="ts-input-wrapper">
+      <i data-lucide="lock" class="ts-input-icon w-4 h-4"></i>
+      {{ form.password1 }}
+    </div>
+    {% if form.password1.errors %}<p class="ts-field-error">{{ form.password1.errors.0 }}</p>{% endif %}
+  </div>
+
+  <div class="ts-form-group">
+    <label class="ts-label">Confirm password</label>
+    <div class="ts-input-wrapper">
+      <i data-lucide="lock" class="ts-input-icon w-4 h-4"></i>
+      {{ form.password2 }}
+    </div>
+    {% if form.password2.errors %}<p class="ts-field-error">{{ form.password2.errors.0 }}</p>{% endif %}
+  </div>
+
+  <button type="submit" class="ts-btn ts-btn-primary ts-btn-lg w-full mt-2">
+    <i data-lucide="user-plus" class="w-4 h-4"></i>
+    Create account
+  </button>
+</form>
+
+<p class="mt-6 text-center text-sm" style="color:var(--color-ink-muted)">
+  Already have an account?
+  <a href="{% url 'login' %}" class="font-medium" style="color:var(--color-primary)">Sign in</a>
+</p>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">
+        Welcome, {{ request.user.first_name|default:request.user.username }}
+      </h1>
+      <p class="text-sm mt-1" style="color:var(--color-ink-muted)">Here's your TutorSync overview</p>
+    </div>
+    <a href="/requests/new/" class="ts-btn ts-btn-primary">
+      <i data-lucide="plus" class="w-4 h-4"></i>
+      New Request
+    </a>
+  </div>
+
+  {# Active requests #}
+  <div class="ts-card">
+    <div class="ts-card-header">
+      <h2 class="font-semibold" style="color:var(--color-ink)">Active Requests</h2>
+      <a href="/requests/" class="text-sm" style="color:var(--color-primary)">View all</a>
+    </div>
+    <div class="ts-card-body">
+      {% if active_requests %}
+      <div class="space-y-3">
+        {% for req in active_requests %}
+        <div class="flex items-center gap-3 p-3 rounded-lg" style="background:var(--color-surface-2)">
+          {% include "components/badge.html" with status=req.status %}
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium truncate" style="color:var(--color-ink)">
+              {{ req.subject }} — {{ req.student.name|default:"No student" }}
+            </p>
+            <p class="text-xs" style="color:var(--color-ink-faint)">{{ req.created_at|date:"M d, Y" }}</p>
+          </div>
+          {% if req.assigned_tutor %}
+          <p class="text-xs" style="color:var(--color-ink-muted)">{{ req.assigned_tutor.user.get_full_name }}</p>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      {% include "components/empty_state.html" with icon="file-text" title="No active requests" message="Submit a request to get matched with a tutor." %}
+      {% endif %}
+    </div>
+  </div>
+
+  {# Students #}
+  <div class="ts-card">
+    <div class="ts-card-header">
+      <h2 class="font-semibold" style="color:var(--color-ink)">My Students</h2>
+      <a href="/guardians/students/add/" class="ts-btn ts-btn-ghost ts-btn-sm">
+        <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add student
+      </a>
+    </div>
+    <div class="ts-card-body">
+      {% if students %}
+      <div class="divide-y" style="border-color:var(--color-border)">
+        {% for student in students %}
+        <div class="flex items-center gap-3 py-3">
+          <div class="ts-avatar ts-avatar-sm">{{ student.name|first|upper }}</div>
+          <div class="flex-1">
+            <p class="text-sm font-medium" style="color:var(--color-ink)">{{ student.name }}</p>
+            <p class="text-xs" style="color:var(--color-ink-muted)">Grade {{ student.grade }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      {% include "components/empty_state.html" with icon="users" title="No students yet" message="Add a student to start submitting tutor requests." %}
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-4">
+
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">Notifications</h1>
+      <p class="text-sm mt-1" style="color:var(--color-ink-muted)">All your recent alerts</p>
+    </div>
+  </div>
+
+  {% if notifications %}
+  <div class="ts-card divide-y" style="border-color:var(--color-border)">
+    {% for notif in notifications %}
+    <a href="{{ notif.link|default:'#' }}"
+       class="flex gap-3 px-5 py-4 hover:bg-slate-50 transition-colors {% if not notif.is_read %}bg-blue-50{% endif %}"
+       style="text-decoration:none">
+      <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0
+                  {% if not notif.is_read %}bg-blue-500{% else %}bg-transparent{% endif %}"></div>
+      <div class="min-w-0 flex-1">
+        <p class="text-sm font-medium" style="color:var(--color-ink)">{{ notif.title }}</p>
+        <p class="text-sm mt-0.5" style="color:var(--color-ink-muted)">{{ notif.message }}</p>
+        <p class="text-xs mt-1" style="color:var(--color-ink-faint)">{{ notif.created_at|timesince }} ago</p>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  {% include "components/empty_state.html" with icon="bell-off" title="No notifications" message="You're all caught up!" %}
+  {% endif %}
+
+</div>
+{% endblock %}

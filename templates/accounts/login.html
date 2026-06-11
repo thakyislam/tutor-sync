@@ -1,0 +1,52 @@
+{% extends "base_auth.html" %}
+{% block title %}Sign In{% endblock %}
+
+{% block auth_content %}
+<div class="mb-8">
+  <h1 class="text-2xl font-bold tracking-tight mb-1" style="color:var(--color-ink)">Welcome back</h1>
+  <p class="text-sm" style="color:var(--color-ink-muted)">Sign in to your TutorSync account</p>
+</div>
+
+<form method="post" class="space-y-4">
+  {% csrf_token %}
+
+  <div class="ts-form-group">
+    <label class="ts-label" for="id_username">Username</label>
+    <div class="ts-input-wrapper">
+      <i data-lucide="user" class="ts-input-icon w-4 h-4"></i>
+      {{ form.username }}
+    </div>
+    {% if form.username.errors %}
+    <p class="ts-field-error">{{ form.username.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <div class="ts-form-group">
+    <label class="ts-label" for="id_password">Password</label>
+    <div class="ts-input-wrapper">
+      <i data-lucide="lock" class="ts-input-icon w-4 h-4"></i>
+      {{ form.password }}
+    </div>
+    {% if form.password.errors %}
+    <p class="ts-field-error">{{ form.password.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  {% if form.non_field_errors %}
+  <div class="ts-alert ts-alert-error">
+    <i data-lucide="x-circle" class="w-4 h-4 flex-shrink-0"></i>
+    <span class="text-sm">{{ form.non_field_errors.0 }}</span>
+  </div>
+  {% endif %}
+
+  <button type="submit" class="ts-btn ts-btn-primary ts-btn-lg w-full mt-2">
+    <i data-lucide="log-in" class="w-4 h-4"></i>
+    Sign in
+  </button>
+</form>
+
+<p class="mt-6 text-center text-sm" style="color:var(--color-ink-muted)">
+  Don't have an account?
+  <a href="{% url 'register' %}" class="font-medium" style="color:var(--color-primary)">Create one</a>
+</p>
+{% endblock %}

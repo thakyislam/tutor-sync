@@ -4,10 +4,10 @@
   <div class="ts-accent-bar"></div>
 
   {# Logo area #}
-  <div class="flex items-center px-5 h-16 border-b" style="border-color:var(--color-border)">
+  <div class="ts-sidebar-header flex items-center px-5 h-16 border-b" style="border-color:var(--color-border)">
     {% include "components/logo.html" with size="md" %}
     <button id="ts-sidebar-toggle" class="ts-btn ts-btn-ghost ts-btn-icon ml-auto flex-shrink-0" aria-label="Toggle sidebar">
-      <i data-lucide="panel-left-close" class="w-4 h-4"></i>
+      <i data-lucide="menu" class="w-4 h-4"></i>
     </button>
   </div>
 
@@ -38,6 +38,10 @@
     <a href="{% url 'application_list' %}"   class="ts-nav-item {% if 'application' in request.resolver_match.url_name %}active{% endif %}">
       <i data-lucide="clipboard-list" class="w-4.5 h-4.5"></i>
       <span class="nav-label">Applications</span>
+    </a>
+    <a href="{% url 'admin_user_list' %}"    class="ts-nav-item {% if 'admin_user' in request.resolver_match.url_name %}active{% endif %}">
+      <i data-lucide="shield" class="w-4.5 h-4.5"></i>
+      <span class="nav-label">Users</span>
     </a>
 
     {% elif user.role == 'tutor' %}
@@ -87,7 +91,7 @@
   </nav>
 
   {# Sidebar footer #}
-  <div class="p-4 border-t" style="border-color:var(--color-border)">
+  <div class="ts-sidebar-footer p-4 border-t" style="border-color:var(--color-border)">
     <div class="flex items-center gap-3 overflow-hidden">
       <div class="ts-avatar ts-avatar-sm flex-shrink-0">{{ user.get_full_name|first|default:user.username|first|upper }}</div>
       <div class="nav-label min-w-0">
@@ -95,9 +99,9 @@
         <span class="ts-badge ts-role-{{ user.role }} text-xs">{{ user.role|title }}</span>
       </div>
     </div>
-    <a href="{% url 'logout' %}" class="ts-btn ts-btn-ghost mt-3 w-full justify-start nav-label" style="color:var(--color-ink-muted)">
-      <i data-lucide="log-out" class="w-4 h-4"></i>
-      Sign out
+    <a href="{% url 'logout' %}" class="ts-btn ts-btn-ghost ts-sidebar-logout mt-3 w-full justify-start" style="color:var(--color-ink-muted)">
+      <i data-lucide="log-out" class="w-4 h-4 flex-shrink-0"></i>
+      <span class="nav-label">Sign out</span>
     </a>
   </div>
 </aside>

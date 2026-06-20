@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Tutor Applications{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <div class="flex items-start justify-between gap-4 flex-wrap">
+    <div>
+      <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">Tutor Applications</h1>
+      <p class="text-sm mt-1" style="color:var(--color-ink-muted)">Review and process incoming tutor applications</p>
+    </div>
+    <a href="{% url 'tutor_apply' %}" class="ts-btn ts-btn-secondary" target="_blank" rel="noopener">
+      <i data-lucide="external-link" class="w-4 h-4"></i>
+      View Public Form
+    </a>
+  </div>
+
+  {# Pipeline summary #}
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+    {% for code, label, count in pipeline %}
+    <a href="?status={{ code }}"
+       class="ts-card ts-card-body text-center hover:shadow-md transition-shadow {% if status_filter == code %}ring-2{% endif %}"
+       style="text-decoration:none;{% if status_filter == code %}ring-color:var(--color-primary){% endif %}">
+      <p class="text-2xl font-bold" style="color:var(--color-ink)">{{ count }}</p>
+      <p class="text-xs font-medium mt-1" style="color:var(--color-ink-subtle)">{{ label }}</p>
+    </a>
+    {% endfor %}
+  </div>
+
+  {# Filter buttons #}
+  <div class="flex items-center gap-2 flex-wrap">
+    <a href="?" class="ts-btn ts-btn-sm {% if not status_filter %}ts-btn-primary{% else %}ts-btn-secondary{% endif %}">
+      All
+    </a>
+    {% for code, label in status_choices %}
+    <a href="?status={{ code }}"
+       class="ts-btn ts-btn-sm {% if status_filter == code %}ts-btn-primary{% else %}ts-btn-secondary{% endif %}">
+      {{ label }}
+    </a>
+    {% endfor %}
+  </div>
+
+  {# Table or empty state #}
+  {% if page_obj.object_list %}
+  <div class="ts-card overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="ts-table w-full">
+        <thead>
+          <tr>
+            <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Applicant</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Subjects</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Status</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Reviewed by</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Submitted</th>
+            <th class="px-4 py-3"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y" style="border-color:var(--color-border)">
+          {% for app in page_obj %}
+          <tr class="hover:bg-slate-50 transition-colors">
+            <td class="px-4 py-3">
+              <p class="font-medium text-sm" style="color:var(--color-ink)">{{ app.full_name }}</p>
+              <p class="text-xs mt-0.5" style="color:var(--color-ink-subtle)">{{ app.email }}</p>
+            </td>
+            <td class="px-4 py-3">
+              <div class="flex flex-wrap gap-1">
+                {% for subject in app.subjects.all %}
+                <span class="ts-badge ts-badge-closed">{{ subject.name }}</span>
+                {% empty %}
+                <span style="color:var(--color-ink-faint)">—</span>
+                {% endfor %}
+              </div>
+            </td>
+            <td class="px-4 py-3">
+              {% include "components/badge.html" with status=app.status label=app.get_status_display %}
+            </td>
+            <td class="px-4 py-3 text-sm" style="color:var(--color-ink-muted)">
+              {% if app.reviewed_by %}
+                {{ app.reviewed_by.get_full_name|default:app.reviewed_by.username }}
+              {% else %}
+                <span style="color:var(--color-ink-faint)">Unreviewed</span>
+              {% endif %}
+            </td>
+            <td class="px-4 py-3 text-sm" style="color:var(--color-ink-muted)">
+              {{ app.submitted_at|date:"M j, Y" }}
+            </td>
+            <td class="px-4 py-3 text-right">
+              <a href="{% url 'application_detail' app.pk %}" class="ts-btn ts-btn-sm ts-btn-secondary">
+                <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                Review
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% include "components/pagination.html" with page_obj=page_obj %}
+
+  {% else %}
+  {% include "components/empty_state.html" with
+     icon="clipboard-list"
+     title="No applications found"
+     description="No applications match the current filter."
+  %}
+  {% endif %}
+
+</div>
+{% endblock %}

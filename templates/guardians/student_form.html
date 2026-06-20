@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}{% if student %}Edit Student{% else %}Add Student{% endif %}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl space-y-6">
+
+  <nav class="flex items-center gap-2 text-sm" style="color:var(--color-ink-muted)">
+    <a href="{% url 'dashboard' %}" style="color:var(--color-primary)">Dashboard</a>
+    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+    <span style="color:var(--color-ink)">{% if student %}Edit Student{% else %}Add Student{% endif %}</span>
+  </nav>
+
+  <div>
+    <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">
+      {% if student %}Edit {{ student.name }}{% else %}Add a Student{% endif %}
+    </h1>
+    <p class="text-sm mt-1" style="color:var(--color-ink-muted)">
+      {% if student %}Update student information{% else %}Add a student so you can submit tutor requests{% endif %}
+    </p>
+  </div>
+
+  <div class="ts-card">
+    <div class="ts-card-body">
+      <form method="post" class="space-y-5">
+        {% csrf_token %}
+
+        <div class="ts-form-group">
+          <label class="ts-label" for="{{ form.name.id_for_label }}">
+            Name <span class="text-red-500">*</span>
+          </label>
+          {{ form.name }}
+          {% if form.name.errors %}
+          <p class="ts-field-error">{{ form.name.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div class="ts-form-group">
+          <label class="ts-label" for="{{ form.grade.id_for_label }}">
+            Grade / Year <span class="text-red-500">*</span>
+          </label>
+          {{ form.grade }}
+          {% if form.grade.errors %}
+          <p class="ts-field-error">{{ form.grade.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div class="ts-form-group">
+          <label class="ts-label">Subjects needed</label>
+          <div class="flex flex-wrap gap-x-4 gap-y-2 mt-1">
+            {% for checkbox in form.subjects_needed %}
+            <label class="inline-flex items-center gap-2 text-sm cursor-pointer"
+                   style="color:var(--color-ink-soft)">
+              {{ checkbox.tag }}
+              {{ checkbox.choice_label }}
+            </label>
+            {% endfor %}
+          </div>
+          {% if form.subjects_needed.errors %}
+          <p class="ts-field-error">{{ form.subjects_needed.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        <div class="ts-form-group">
+          <label class="ts-label" for="{{ form.notes.id_for_label }}">Notes</label>
+          {{ form.notes }}
+          {% if form.notes.errors %}
+          <p class="ts-field-error">{{ form.notes.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="ts-alert ts-alert-error">
+          <i data-lucide="x-circle" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="text-sm">{{ form.non_field_errors.0 }}</span>
+        </div>
+        {% endif %}
+
+        <div class="flex items-center gap-3 pt-2">
+          <button type="submit" class="ts-btn ts-btn-primary">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            {% if student %}Save Changes{% else %}Add Student{% endif %}
+          </button>
+          <a href="{% url 'dashboard' %}" class="ts-btn ts-btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

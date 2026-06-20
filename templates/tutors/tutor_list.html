@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Tutors{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <div class="flex items-start justify-between gap-4 flex-wrap">
+    <div>
+      <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">Tutors</h1>
+      <p class="text-sm mt-1" style="color:var(--color-ink-muted)">Browse the tutor directory</p>
+    </div>
+    {% if is_admin %}
+    <a href="{% url 'tutor_apply' %}" target="_blank" rel="noopener" class="ts-btn ts-btn-secondary">
+      <i data-lucide="external-link" class="w-4 h-4"></i>
+      Public Apply Form
+    </a>
+    {% endif %}
+  </div>
+
+  {# Filters #}
+  <form method="get" class="ts-card ts-card-body">
+    <div class="flex items-end gap-3 flex-wrap">
+      <div class="ts-form-group mb-0">
+        <label class="ts-label text-xs">Subject</label>
+        <select name="subject" class="ts-input">
+          <option value="">All subjects</option>
+          {% for subj in subjects %}
+          <option value="{{ subj.pk }}" {% if subject_filter == subj.pk|stringformat:"s" %}selected{% endif %}>{{ subj.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% if is_admin %}
+      <div class="ts-form-group mb-0">
+        <label class="ts-label text-xs">Status</label>
+        <select name="status" class="ts-input">
+          <option value="">All statuses</option>
+          {% for code, label in status_choices %}
+          <option value="{{ code }}" {% if status_filter == code %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="ts-form-group mb-0">
+        <label class="ts-label text-xs">Verified</label>
+        <select name="verified" class="ts-input">
+          <option value="">Any</option>
+          <option value="1" {% if verified_filter == '1' %}selected{% endif %}>Verified only</option>
+          <option value="0" {% if verified_filter == '0' %}selected{% endif %}>Unverified only</option>
+        </select>
+      </div>
+      {% endif %}
+      <button type="submit" class="ts-btn ts-btn-primary">
+        <i data-lucide="search" class="w-4 h-4"></i>
+        Filter
+      </button>
+      {% if subject_filter or status_filter or verified_filter %}
+      <a href="?" class="ts-btn ts-btn-secondary">Clear</a>
+      {% endif %}
+    </div>
+  </form>
+
+  {% if page_obj.object_list %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for tutor in page_obj %}
+    <a href="{% url 'tutor_detail' tutor.pk %}" class="ts-card ts-card-body hover:shadow-md transition-shadow" style="text-decoration:none">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="ts-avatar">{{ tutor.user.get_full_name|first|default:tutor.user.username|first|upper }}</div>
+        <div class="min-w-0">
+          <p class="font-semibold text-sm truncate" style="color:var(--color-ink)">
+            {{ tutor.user.get_full_name|default:tutor.user.username }}
+          </p>
+          <div class="flex items-center gap-1.5 mt-0.5">
+            {% include "components/badge.html" with status=tutor.status label=tutor.get_status_display %}
+            {% if tutor.verified %}
+            <span class="ts-badge ts-badge-matched">Verified</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% if tutor.subjects.exists %}
+      <div class="flex flex-wrap gap-1 mb-2">
+        {% for subj in tutor.subjects.all|slice:":4" %}
+        <span class="ts-badge ts-badge-closed">{{ subj.name }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <div class="flex items-center justify-between text-xs mt-2" style="color:var(--color-ink-faint)">
+        <span>{{ tutor.experience_yrs }} yr{% if tutor.experience_yrs != 1 %}s{% endif %} exp.</span>
+        {% if tutor.hourly_rate %}<span>${{ tutor.hourly_rate }}/hr</span>{% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  {% include "components/pagination.html" with page_obj=page_obj %}
+
+  {% else %}
+  {% include "components/empty_state.html" with
+     icon="graduation-cap"
+     title="No tutors found"
+     description="No tutors match the current filters."
+  %}
+  {% endif %}
+
+</div>
+{% endblock %}

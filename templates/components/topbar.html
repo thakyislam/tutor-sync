@@ -1,5 +1,10 @@
 {# Topbar component — include inside ts-main #}
 <header class="ts-topbar">
+  {# Mobile hamburger #}
+  <button id="ts-mobile-menu" class="ts-btn ts-btn-ghost ts-btn-icon ts-mobile-menu-btn" aria-label="Open menu">
+    <i data-lucide="menu" class="w-5 h-5"></i>
+  </button>
+
   {# Breadcrumb #}
   <nav class="ts-breadcrumb flex-1" aria-label="Breadcrumb">
     {% block breadcrumb %}

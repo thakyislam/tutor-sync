@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}User Management{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <div class="flex items-start justify-between gap-4 flex-wrap">
+    <div>
+      <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">User Management</h1>
+      <p class="text-sm mt-1" style="color:var(--color-ink-muted)">All platform accounts</p>
+    </div>
+    <a href="{% url 'admin_user_create' %}" class="ts-btn ts-btn-primary">
+      <i data-lucide="user-plus" class="w-4 h-4"></i>
+      Add User
+    </a>
+  </div>
+
+  {# Search & filter #}
+  <form method="get" class="flex items-center gap-3 flex-wrap">
+    <div class="relative flex-1 max-w-xs">
+      <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style="color:var(--color-ink-faint)"></i>
+      <input type="text" name="q" value="{{ q }}" placeholder="Search name / email / username..."
+             class="ts-input pl-9 w-full">
+    </div>
+    <select name="role" class="ts-input w-40">
+      <option value="">All roles</option>
+      {% for code, label in role_choices %}
+      <option value="{{ code }}" {% if role_filter == code %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="ts-btn ts-btn-primary">Search</button>
+    {% if q or role_filter %}<a href="?" class="ts-btn ts-btn-secondary">Clear</a>{% endif %}
+  </form>
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="ts-alert ts-alert-success animate-fade-in">
+    <i data-lucide="check-circle" class="w-4 h-4 flex-shrink-0"></i>
+    <span class="text-sm">{{ message }}</span>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% if page_obj.object_list %}
+  <div class="ts-card overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="ts-table w-full">
+        <thead>
+          <tr>
+            <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">User</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Username</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Role</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Status</th>
+            <th class="px-4 py-3"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y" style="border-color:var(--color-border)">
+          {% for usr in page_obj %}
+          <tr class="hover:bg-slate-50 transition-colors">
+            <td class="px-4 py-3">
+              <p class="font-medium text-sm" style="color:var(--color-ink)">{{ usr.get_full_name|default:usr.username }}</p>
+              <p class="text-xs mt-0.5" style="color:var(--color-ink-subtle)">{{ usr.email }}</p>
+            </td>
+            <td class="px-4 py-3 text-sm font-mono" style="color:var(--color-ink-muted)">{{ usr.username }}</td>
+            <td class="px-4 py-3">
+              <span class="ts-badge ts-role-{{ usr.role }}">{{ usr.role|title }}</span>
+            </td>
+            <td class="px-4 py-3">
+              {% if usr.is_active %}
+              <span class="ts-badge ts-badge-active">Active</span>
+              {% else %}
+              <span class="ts-badge ts-badge-inactive">Inactive</span>
+              {% endif %}
+            </td>
+            <td class="px-4 py-3 text-right">
+              <a href="{% url 'admin_user_edit' usr.pk %}" class="ts-btn ts-btn-sm ts-btn-secondary">
+                <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+                Edit
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% include "components/pagination.html" with page_obj=page_obj %}
+
+  {% else %}
+  {% include "components/empty_state.html" with
+     icon="users"
+     title="No users found"
+     description="No users match your search."
+  %}
+  {% endif %}
+
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+  {% for column in kanban_columns %}
+  <div class="flex flex-col gap-3">
+
+    <div class="flex items-center justify-between px-1">
+      <h3 class="text-sm font-semibold" style="color:var(--color-ink)">{{ column.label }}</h3>
+      <span class="ts-badge ts-badge-{{ column.code }}">{{ column.requests|length }}</span>
+    </div>
+
+    <div class="space-y-2 min-h-24">
+      {% for req in column.requests %}
+      <a href="{% url 'request_detail' req.pk %}"
+         class="ts-card ts-card-body block hover:shadow-md transition-shadow"
+         style="text-decoration:none">
+        <div class="flex items-center justify-between gap-2 mb-1.5">
+          <span class="text-xs font-mono" style="color:var(--color-ink-faint)">#{{ req.pk }}</span>
+          {% if req.assigned_tutor %}
+          <span class="ts-badge ts-badge-matched text-xs">Assigned</span>
+          {% endif %}
+        </div>
+        <p class="text-sm font-medium truncate" style="color:var(--color-ink)">
+          {{ req.subject|default:"No subject" }}
+        </p>
+        <p class="text-xs mt-0.5 truncate" style="color:var(--color-ink-muted)">
+          {{ req.guardian.user.get_full_name|default:req.guardian.user.username }}
+        </p>
+        {% if req.student %}
+        <p class="text-xs mt-0.5" style="color:var(--color-ink-faint)">{{ req.student.name }}</p>
+        {% endif %}
+        <p class="text-xs mt-2" style="color:var(--color-ink-faint)">{{ req.created_at|date:"M j" }}</p>
+      </a>
+      {% empty %}
+      <div class="border-2 border-dashed rounded-lg p-4 text-center text-xs" style="border-color:var(--color-border);color:var(--color-ink-faint)">
+        No requests
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+  {% endfor %}
+</div>

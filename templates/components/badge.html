@@ -1,7 +1,8 @@
-{# Status badge component
-   Usage: {% include "components/badge.html" with status="pending" %}
-          {% include "components/badge.html" with status=object.status label=object.get_status_display %}
-#}
+{% comment %}
+Status badge component
+Usage: include "components/badge.html" with status="pending"
+       include "components/badge.html" with status=object.status label=object.get_status_display
+{% endcomment %}
 {% with s=status|lower %}
 <span class="ts-badge
   {% if s == 'pending' %}ts-badge-pending

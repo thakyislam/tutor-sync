@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Tutor Account Created{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto space-y-6">
+
+  <div class="text-center space-y-2">
+    <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl mx-auto"
+         style="background:var(--color-accent-50)">
+      <i data-lucide="user-check" class="w-8 h-8" style="color:var(--color-accent)"></i>
+    </div>
+    <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">Tutor Account Created</h1>
+    <p class="text-sm" style="color:var(--color-ink-muted)">
+      A new tutor account has been created for <strong>{{ new_user.get_full_name }}</strong>.
+    </p>
+  </div>
+
+  {# Credentials card #}
+  <div class="ts-card ts-card-body space-y-4">
+
+    <div class="ts-alert ts-alert-warning">
+      <i data-lucide="alert-triangle" class="w-4 h-4 flex-shrink-0"></i>
+      <span class="text-sm">
+        Copy and share these credentials with the tutor now.
+        The password will <strong>not</strong> be shown again.
+      </span>
+    </div>
+
+    <div class="ts-form-group">
+      <label class="ts-label">Username</label>
+      <input type="text" class="ts-input font-mono" value="{{ new_user.username }}" readonly>
+    </div>
+
+    <div class="ts-form-group">
+      <label class="ts-label">Temporary Password</label>
+      <input type="text" class="ts-input font-mono" value="{{ raw_password }}" readonly
+             id="ts-temp-password">
+    </div>
+
+    <div class="ts-form-group">
+      <label class="ts-label">Email</label>
+      <input type="text" class="ts-input" value="{{ new_user.email }}" readonly>
+    </div>
+
+    <button type="button" class="ts-btn ts-btn-secondary w-full" id="ts-copy-btn"
+            onclick="navigator.clipboard.writeText(document.getElementById('ts-temp-password').value).then(function(){var b=document.getElementById('ts-copy-btn');b.textContent='Copied!';setTimeout(function(){b.innerHTML='<i data-lucide=\'copy\' class=\'w-4 h-4\'></i> Copy Password';lucide.createIcons();},2000)})">
+      <i data-lucide="copy" class="w-4 h-4"></i>
+      Copy Password
+    </button>
+
+  </div>
+
+  <div class="flex gap-3">
+    <a href="{% url 'application_detail' application.pk %}" class="ts-btn ts-btn-secondary flex-1">
+      <i data-lucide="arrow-left" class="w-4 h-4"></i>
+      Back to Application
+    </a>
+    <a href="{% url 'application_list' %}" class="ts-btn ts-btn-primary flex-1">
+      <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+      All Applications
+    </a>
+  </div>
+
+</div>
+{% endblock %}

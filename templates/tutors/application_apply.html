@@ -1,0 +1,123 @@
+{% extends "base_auth.html" %}
+{% load static %}
+{% block title %}Apply as a Tutor{% endblock %}
+
+{% block auth_content %}
+<div class="mb-8">
+  <h1 class="text-2xl font-bold tracking-tight mb-1" style="color:var(--color-ink)">
+    Apply as a Tutor
+  </h1>
+  <p class="text-sm" style="color:var(--color-ink-muted)">
+    Fill in the form below. We review every application personally.
+  </p>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="space-y-5">
+  {% csrf_token %}
+
+  <div class="ts-form-group">
+    <label class="ts-label" for="{{ form.full_name.id_for_label }}">
+      Full name <span class="text-red-500">*</span>
+    </label>
+    {{ form.full_name }}
+    {% if form.full_name.errors %}
+    <p class="ts-field-error">{{ form.full_name.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <div class="ts-form-group">
+    <label class="ts-label" for="{{ form.email.id_for_label }}">
+      Email <span class="text-red-500">*</span>
+    </label>
+    {{ form.email }}
+    {% if form.email.errors %}
+    <p class="ts-field-error">{{ form.email.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <div class="ts-form-group">
+    <label class="ts-label" for="{{ form.phone.id_for_label }}">
+      Phone <span class="text-red-500">*</span>
+    </label>
+    {{ form.phone }}
+    {% if form.phone.errors %}
+    <p class="ts-field-error">{{ form.phone.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <div class="ts-form-group">
+    <label class="ts-label">Subjects you can teach</label>
+    <div class="flex flex-wrap gap-x-4 gap-y-2 mt-1">
+      {% for checkbox in form.subjects %}
+      <label class="inline-flex items-center gap-2 text-sm cursor-pointer"
+             style="color:var(--color-ink-soft)">
+        {{ checkbox.tag }}
+        {{ checkbox.choice_label }}
+      </label>
+      {% endfor %}
+    </div>
+    {% if form.subjects.errors %}
+    <p class="ts-field-error">{{ form.subjects.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <div class="ts-form-group">
+    <label class="ts-label" for="{{ form.education.id_for_label }}">
+      Education <span class="text-red-500">*</span>
+    </label>
+    {{ form.education }}
+    {% if form.education.errors %}
+    <p class="ts-field-error">{{ form.education.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <div class="ts-form-group">
+    <label class="ts-label" for="{{ form.experience.id_for_label }}">
+      Experience <span class="text-red-500">*</span>
+    </label>
+    {{ form.experience }}
+    {% if form.experience.errors %}
+    <p class="ts-field-error">{{ form.experience.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <div class="ts-form-group">
+    <label class="ts-label" for="{{ form.resume.id_for_label }}">
+      Resume / CV <span class="text-red-500">*</span>
+    </label>
+    {{ form.resume }}
+    <p class="ts-field-hint">PDF or Word document</p>
+    {% if form.resume.errors %}
+    <p class="ts-field-error">{{ form.resume.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <div class="ts-form-group">
+    <label class="ts-label" for="{{ form.id_document.id_for_label }}">
+      ID document <span class="text-xs" style="color:var(--color-ink-faint)">(optional)</span>
+    </label>
+    {{ form.id_document }}
+    <p class="ts-field-hint">Passport or national ID scan</p>
+    {% if form.id_document.errors %}
+    <p class="ts-field-error">{{ form.id_document.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  {% if form.non_field_errors %}
+  <div class="ts-alert ts-alert-error">
+    <i data-lucide="x-circle" class="w-4 h-4 flex-shrink-0"></i>
+    <span class="text-sm">{{ form.non_field_errors.0 }}</span>
+  </div>
+  {% endif %}
+
+  <button type="submit" class="ts-btn ts-btn-primary ts-btn-lg w-full mt-2">
+    <i data-lucide="send" class="w-4 h-4"></i>
+    Submit Application
+  </button>
+</form>
+
+<p class="mt-6 text-center text-sm" style="color:var(--color-ink-muted)">
+  Already have an account?
+  <a href="{% url 'login' %}" class="font-medium" style="color:var(--color-primary)">Sign in</a>
+</p>
+{% endblock %}

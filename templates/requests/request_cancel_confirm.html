@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Cancel Request #{{ request_obj.pk }}{% endblock %}
+
+{% block content %}
+<div class="max-w-lg space-y-6">
+
+  <nav class="flex items-center gap-2 text-sm" style="color:var(--color-ink-muted)">
+    <a href="{% url 'request_list' %}" style="color:var(--color-primary)">My Requests</a>
+    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+    <a href="{% url 'request_detail' request_obj.pk %}" style="color:var(--color-primary)">Request #{{ request_obj.pk }}</a>
+    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+    <span style="color:var(--color-ink)">Cancel</span>
+  </nav>
+
+  <div class="ts-card ts-card-body text-center space-y-4">
+
+    <div class="mx-auto w-12 h-12 rounded-full flex items-center justify-center"
+         style="background:var(--color-error-surface)">
+      <i data-lucide="x-circle" class="w-6 h-6" style="color:var(--color-error)"></i>
+    </div>
+
+    <div>
+      <h1 class="text-xl font-bold" style="color:var(--color-ink)">Cancel this request?</h1>
+      <p class="text-sm mt-1" style="color:var(--color-ink-muted)">
+        Request #{{ request_obj.pk }} — {{ request_obj.subject }} for
+        {{ request_obj.student.name|default:"no student" }}.
+        This action cannot be undone.
+      </p>
+    </div>
+
+    <div class="flex items-center justify-center gap-3 pt-2">
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="ts-btn ts-btn-primary" style="background:var(--color-error);border-color:var(--color-error)">
+          <i data-lucide="x" class="w-4 h-4"></i>
+          Yes, cancel request
+        </button>
+      </form>
+      <a href="{% url 'request_detail' request_obj.pk %}" class="ts-btn ts-btn-secondary">
+        Keep request
+      </a>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

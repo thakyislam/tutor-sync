@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}{% if is_admin %}All Requests{% else %}My Requests{% endif %}{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <div class="flex items-start justify-between gap-4 flex-wrap">
+    <div>
+      <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">
+        {% if is_admin %}Tutor Requests{% else %}My Requests{% endif %}
+      </h1>
+      <p class="text-sm mt-1" style="color:var(--color-ink-muted)">
+        {% if is_admin %}All requests across guardians{% else %}Track your submitted tutor requests{% endif %}
+      </p>
+    </div>
+    <div class="flex items-center gap-2 flex-wrap">
+      {% if is_admin %}
+      <a href="{% url 'request_export' %}?status={{ status_filter }}&subject={{ subject_filter }}&date_from={{ date_from }}&date_to={{ date_to }}"
+         class="ts-btn ts-btn-secondary">
+        <i data-lucide="download" class="w-4 h-4"></i>
+        Export CSV
+      </a>
+      {% endif %}
+      {% if not is_admin %}
+      <a href="{% url 'request_create' %}" class="ts-btn ts-btn-primary">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        New Request
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Admin filters + view toggle #}
+  {% if is_admin %}
+  <div class="ts-card ts-card-body space-y-3">
+    <form method="get" class="flex items-end gap-3 flex-wrap">
+      {% if view_mode == 'kanban' %}<input type="hidden" name="view" value="kanban">{% endif %}
+      <div class="ts-form-group mb-0">
+        <label class="ts-label text-xs">Status</label>
+        <select name="status" class="ts-input">
+          <option value="">All</option>
+          {% for code, label in status_choices %}
+          <option value="{{ code }}" {% if status_filter == code %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="ts-form-group mb-0">
+        <label class="ts-label text-xs">Subject</label>
+        <select name="subject" class="ts-input">
+          <option value="">All subjects</option>
+          {% for subj in subjects %}
+          <option value="{{ subj.pk }}" {% if subject_filter == subj.pk|stringformat:"s" %}selected{% endif %}>{{ subj.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="ts-form-group mb-0">
+        <label class="ts-label text-xs">From</label>
+        <input type="date" name="date_from" value="{{ date_from }}" class="ts-input">
+      </div>
+      <div class="ts-form-group mb-0">
+        <label class="ts-label text-xs">To</label>
+        <input type="date" name="date_to" value="{{ date_to }}" class="ts-input">
+      </div>
+      <button type="submit" class="ts-btn ts-btn-primary">Filter</button>
+      {% if status_filter or subject_filter or date_from or date_to %}
+      <a href="?{% if view_mode == 'kanban' %}view=kanban{% endif %}" class="ts-btn ts-btn-secondary">Clear</a>
+      {% endif %}
+    </form>
+
+    {# View toggle #}
+    <div class="flex items-center gap-2">
+      <a href="?status={{ status_filter }}&subject={{ subject_filter }}&date_from={{ date_from }}&date_to={{ date_to }}&view=table"
+         class="ts-btn ts-btn-sm {% if view_mode == 'table' %}ts-btn-primary{% else %}ts-btn-secondary{% endif %}">
+        <i data-lucide="table" class="w-3.5 h-3.5"></i>
+        Table
+      </a>
+      <a href="?status={{ status_filter }}&subject={{ subject_filter }}&date_from={{ date_from }}&date_to={{ date_to }}&view=kanban"
+         class="ts-btn ts-btn-sm {% if view_mode == 'kanban' %}ts-btn-primary{% else %}ts-btn-secondary{% endif %}">
+        <i data-lucide="layout-dashboard" class="w-3.5 h-3.5"></i>
+        Kanban
+      </a>
+    </div>
+  </div>
+  {% endif %}
+
+  {# Kanban or Table #}
+  {% if is_admin and view_mode == 'kanban' %}
+    {% include "requests/partials/request_kanban.html" %}
+  {% else %}
+    {% include "requests/partials/request_table.html" %}
+  {% endif %}
+
+</div>
+{% endblock %}

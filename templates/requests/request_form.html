@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}New Tutor Request{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl space-y-6">
+
+  <nav class="flex items-center gap-2 text-sm" style="color:var(--color-ink-muted)">
+    <a href="{% url 'request_list' %}" style="color:var(--color-primary)">My Requests</a>
+    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+    <span style="color:var(--color-ink)">New Request</span>
+  </nav>
+
+  <div>
+    <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">Request a Tutor</h1>
+    <p class="text-sm mt-1" style="color:var(--color-ink-muted)">
+      Tell us what you need and we'll find the right match.
+    </p>
+  </div>
+
+  <div class="ts-card">
+    <div class="ts-card-body">
+      <form method="post" class="space-y-5">
+        {% csrf_token %}
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+          <div class="ts-form-group">
+            <label class="ts-label" for="{{ form.subject.id_for_label }}">
+              Subject <span class="text-red-500">*</span>
+            </label>
+            {{ form.subject }}
+            {% if form.subject.errors %}
+            <p class="ts-field-error">{{ form.subject.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="ts-form-group">
+            <label class="ts-label" for="{{ form.student.id_for_label }}">Student</label>
+            {{ form.student }}
+            <p class="ts-field-hint">
+              No students yet?
+              <a href="{% url 'student_add' %}" style="color:var(--color-primary)">Add one first</a>
+            </p>
+            {% if form.student.errors %}
+            <p class="ts-field-error">{{ form.student.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="ts-form-group">
+            <label class="ts-label" for="{{ form.level.id_for_label }}">
+              Level <span class="text-red-500">*</span>
+            </label>
+            {{ form.level }}
+            {% if form.level.errors %}
+            <p class="ts-field-error">{{ form.level.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="ts-form-group">
+            <label class="ts-label" for="{{ form.preferred_mode.id_for_label }}">
+              Preferred mode <span class="text-red-500">*</span>
+            </label>
+            {{ form.preferred_mode }}
+            {% if form.preferred_mode.errors %}
+            <p class="ts-field-error">{{ form.preferred_mode.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="ts-form-group sm:col-span-2">
+            <label class="ts-label" for="{{ form.budget.id_for_label }}">
+              Budget per hour
+              <span class="text-xs" style="color:var(--color-ink-faint)">(optional)</span>
+            </label>
+            {{ form.budget }}
+            {% if form.budget.errors %}
+            <p class="ts-field-error">{{ form.budget.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+        </div>
+
+        <div class="ts-form-group">
+          <label class="ts-label" for="{{ form.schedule_notes.id_for_label }}">Schedule notes</label>
+          {{ form.schedule_notes }}
+          {% if form.schedule_notes.errors %}
+          <p class="ts-field-error">{{ form.schedule_notes.errors.0 }}</p>
+          {% endif %}
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="ts-alert ts-alert-error">
+          <i data-lucide="x-circle" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="text-sm">{{ form.non_field_errors.0 }}</span>
+        </div>
+        {% endif %}
+
+        <div class="flex items-center gap-3 pt-2">
+          <button type="submit" class="ts-btn ts-btn-primary">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            Submit Request
+          </button>
+          <a href="{% url 'request_list' %}" class="ts-btn ts-btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% if page_obj.object_list %}
+<div class="ts-card overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="ts-table w-full">
+      <thead>
+        <tr>
+          <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">#</th>
+          {% if is_admin %}
+          <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Guardian</th>
+          {% endif %}
+          <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Subject</th>
+          <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Student</th>
+          <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Status</th>
+          <th class="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Submitted</th>
+          <th class="px-4 py-3"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y" style="border-color:var(--color-border)">
+        {% for req in page_obj %}
+        <tr class="hover:bg-slate-50 transition-colors">
+          <td class="px-4 py-3 text-sm font-mono" style="color:var(--color-ink-faint)">#{{ req.pk }}</td>
+          {% if is_admin %}
+          <td class="px-4 py-3 text-sm" style="color:var(--color-ink)">
+            {{ req.guardian.user.get_full_name|default:req.guardian.user.username }}
+          </td>
+          {% endif %}
+          <td class="px-4 py-3 text-sm font-medium" style="color:var(--color-ink)">{{ req.subject|default:"—" }}</td>
+          <td class="px-4 py-3 text-sm" style="color:var(--color-ink-muted)">{{ req.student.name|default:"—" }}</td>
+          <td class="px-4 py-3">
+            {% include "components/badge.html" with status=req.status label=req.get_status_display %}
+          </td>
+          <td class="px-4 py-3 text-sm" style="color:var(--color-ink-muted)">{{ req.created_at|date:"M j, Y" }}</td>
+          <td class="px-4 py-3 text-right">
+            <a href="{% url 'request_detail' req.pk %}" class="ts-btn ts-btn-sm ts-btn-secondary">
+              <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+              View
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% include "components/pagination.html" with page_obj=page_obj %}
+
+{% else %}
+{% include "components/empty_state.html" with
+   icon="file-text"
+   title="No requests found"
+   description="No tutor requests match the current filter."
+%}
+{% endif %}

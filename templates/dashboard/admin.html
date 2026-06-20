@@ -81,5 +81,50 @@
     </a>
   </div>
 
+  {# Recent activity #}
+  {% if recent_activity %}
+  <div class="ts-card">
+    <div class="ts-card-header">
+      <h2 class="font-semibold" style="color:var(--color-ink)">Recent Activity</h2>
+    </div>
+    <div class="divide-y" style="border-color:var(--color-border)">
+      {% for item in recent_activity %}
+      <div class="flex items-center gap-3 px-5 py-3">
+        <div class="flex-shrink-0 p-2 rounded-lg" style="background:var(--color-surface-2)">
+          {% if item.activity_type == 'request' %}
+          <i data-lucide="file-text" class="w-4 h-4" style="color:var(--color-accent)"></i>
+          {% else %}
+          <i data-lucide="clipboard-list" class="w-4 h-4" style="color:var(--color-primary)"></i>
+          {% endif %}
+        </div>
+        <div class="flex-1 min-w-0">
+          {% if item.activity_type == 'request' %}
+          <p class="text-sm font-medium truncate" style="color:var(--color-ink)">
+            Request #{{ item.pk }} — {{ item.subject }}
+          </p>
+          <p class="text-xs" style="color:var(--color-ink-faint)">
+            {{ item.guardian.user.get_full_name|default:item.guardian.user.username }}
+          </p>
+          {% else %}
+          <p class="text-sm font-medium truncate" style="color:var(--color-ink)">
+            Application — {{ item.full_name }}
+          </p>
+          <p class="text-xs" style="color:var(--color-ink-faint)">{{ item.email }}</p>
+          {% endif %}
+        </div>
+        <div class="flex items-center gap-2 flex-shrink-0">
+          {% include "components/badge.html" with status=item.status label=item.get_status_display %}
+          {% if item.activity_type == 'request' %}
+          <a href="{% url 'request_detail' item.pk %}" class="ts-btn ts-btn-sm ts-btn-secondary">View</a>
+          {% else %}
+          <a href="{% url 'application_detail' item.pk %}" class="ts-btn ts-btn-sm ts-btn-secondary">View</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
 </div>
 {% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Edit — {{ tutor.user.get_full_name|default:tutor.user.username }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl space-y-6">
+
+  <nav class="flex items-center gap-2 text-sm" style="color:var(--color-ink-muted)">
+    <a href="{% url 'tutor_list' %}" style="color:var(--color-primary)">Tutors</a>
+    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+    <a href="{% url 'tutor_detail' tutor.pk %}" style="color:var(--color-primary)">
+      {{ tutor.user.get_full_name|default:tutor.user.username }}
+    </a>
+    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+    <span style="color:var(--color-ink)">Edit</span>
+  </nav>
+
+  <div>
+    <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">Edit Tutor Profile</h1>
+    <p class="text-sm mt-1" style="color:var(--color-ink-muted)">
+      {{ tutor.user.get_full_name|default:tutor.user.username }}
+      {% if not is_admin %} — you can update your bio, subjects, and availability{% endif %}
+    </p>
+  </div>
+
+  <div class="ts-card">
+    <div class="ts-card-body">
+      <form method="post" class="space-y-5">
+        {% csrf_token %}
+
+        <div class="ts-form-group">
+          <label class="ts-label" for="{{ form.bio.id_for_label }}">Bio</label>
+          {{ form.bio }}
+          {% if form.bio.errors %}<p class="ts-field-error">{{ form.bio.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div class="ts-form-group">
+          <label class="ts-label">Subjects</label>
+          <div class="flex flex-wrap gap-x-4 gap-y-2 mt-1">
+            {% for checkbox in form.subjects %}
+            <label class="inline-flex items-center gap-2 text-sm cursor-pointer" style="color:var(--color-ink-soft)">
+              {{ checkbox.tag }}{{ checkbox.choice_label }}
+            </label>
+            {% endfor %}
+          </div>
+          {% if form.subjects.errors %}<p class="ts-field-error">{{ form.subjects.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="ts-form-group">
+            <label class="ts-label" for="{{ form.education_level.id_for_label }}">Education level</label>
+            {{ form.education_level }}
+            {% if form.education_level.errors %}<p class="ts-field-error">{{ form.education_level.errors.0 }}</p>{% endif %}
+          </div>
+          <div class="ts-form-group">
+            <label class="ts-label" for="{{ form.experience_yrs.id_for_label }}">Years of experience</label>
+            {{ form.experience_yrs }}
+            {% if form.experience_yrs.errors %}<p class="ts-field-error">{{ form.experience_yrs.errors.0 }}</p>{% endif %}
+          </div>
+          <div class="ts-form-group">
+            <label class="ts-label" for="{{ form.hourly_rate.id_for_label }}">Hourly rate ($)</label>
+            {{ form.hourly_rate }}
+            {% if form.hourly_rate.errors %}<p class="ts-field-error">{{ form.hourly_rate.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+
+        <div class="ts-form-group">
+          <label class="ts-label" for="{{ form.availability.id_for_label }}">Availability (JSON)</label>
+          {{ form.availability }}
+          <p class="ts-field-hint">e.g. {"mon": "9am–5pm", "fri": "mornings"}</p>
+          {% if form.availability.errors %}<p class="ts-field-error">{{ form.availability.errors.0 }}</p>{% endif %}
+        </div>
+
+        {% if is_admin %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2 border-t" style="border-color:var(--color-border)">
+          <div class="ts-form-group">
+            <label class="ts-label" for="{{ form.status.id_for_label }}">Status</label>
+            {{ form.status }}
+            {% if form.status.errors %}<p class="ts-field-error">{{ form.status.errors.0 }}</p>{% endif %}
+          </div>
+          <div class="ts-form-group">
+            <label class="ts-label flex items-center gap-2">
+              {{ form.verified }} Verified tutor
+            </label>
+            {% if form.verified.errors %}<p class="ts-field-error">{{ form.verified.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+        <div class="ts-alert ts-alert-error">
+          <i data-lucide="x-circle" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="text-sm">{{ form.non_field_errors.0 }}</span>
+        </div>
+        {% endif %}
+
+        <div class="flex items-center gap-3 pt-2">
+          <button type="submit" class="ts-btn ts-btn-primary">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            Save Changes
+          </button>
+          <a href="{% url 'tutor_detail' tutor.pk %}" class="ts-btn ts-btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -95,6 +95,7 @@
   {% block body %}
   {# Pages without the shell (login, register, apply) override this block #}
   <div class="ts-shell">
+    <div id="ts-sidebar-overlay" class="ts-sidebar-overlay"></div>
     {% include "components/sidebar.html" %}
     <div id="ts-main" class="ts-main">
       {% include "components/topbar.html" %}

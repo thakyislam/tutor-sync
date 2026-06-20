@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}{% if target_user %}Edit User{% else %}Add User{% endif %}{% endblock %}
+
+{% block content %}
+<div class="max-w-lg space-y-6">
+
+  <nav class="flex items-center gap-2 text-sm" style="color:var(--color-ink-muted)">
+    <a href="{% url 'admin_user_list' %}" style="color:var(--color-primary)">Users</a>
+    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+    <span style="color:var(--color-ink)">{% if target_user %}Edit{% else %}Add User{% endif %}</span>
+  </nav>
+
+  <div>
+    <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">
+      {% if target_user %}Edit {{ target_user.get_full_name|default:target_user.username }}{% else %}Add User{% endif %}
+    </h1>
+    {% if not target_user %}
+    <p class="text-sm mt-1" style="color:var(--color-ink-muted)">Create a new platform account.</p>
+    {% endif %}
+  </div>
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="ts-alert ts-alert-success animate-fade-in">
+    <i data-lucide="check-circle" class="w-4 h-4 flex-shrink-0"></i>
+    <span class="text-sm">{{ message }}</span>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="ts-card">
+    <div class="ts-card-body">
+      <form method="post" class="space-y-5">
+        {% csrf_token %}
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="ts-form-group">
+            <label class="ts-label" for="{{ form.first_name.id_for_label }}">First name</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}<p class="ts-field-error">{{ form.first_name.errors.0 }}</p>{% endif %}
+          </div>
+          <div class="ts-form-group">
+            <label class="ts-label" for="{{ form.last_name.id_for_label }}">Last name</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}<p class="ts-field-error">{{ form.last_name.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+
+        {% if not target_user %}
+        <div class="ts-form-group">
+          <label class="ts-label" for="{{ form.username.id_for_label }}">Username <span class="text-red-500">*</span></label>
+          {{ form.username }}
+          {% if form.username.errors %}<p class="ts-field-error">{{ form.username.errors.0 }}</p>{% endif %}
+        </div>
+        {% endif %}
+
+        <div class="ts-form-group">
+          <label class="ts-label" for="{{ form.email.id_for_label }}">Email</label>
+          {{ form.email }}
+          {% if form.email.errors %}<p class="ts-field-error">{{ form.email.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div class="ts-form-group">
+          <label class="ts-label" for="{{ form.phone.id_for_label }}">Phone</label>
+          {{ form.phone }}
+          {% if form.phone.errors %}<p class="ts-field-error">{{ form.phone.errors.0 }}</p>{% endif %}
+        </div>
+
+        <div class="ts-form-group">
+          <label class="ts-label" for="{{ form.role.id_for_label }}">Role <span class="text-red-500">*</span></label>
+          {{ form.role }}
+          {% if form.role.errors %}<p class="ts-field-error">{{ form.role.errors.0 }}</p>{% endif %}
+        </div>
+
+        {% if not target_user %}
+        <div class="ts-form-group">
+          <label class="ts-label" for="{{ form.password.id_for_label }}">Password <span class="text-red-500">*</span></label>
+          {{ form.password }}
+          {% if form.password.errors %}<p class="ts-field-error">{{ form.password.errors.0 }}</p>{% endif %}
+        </div>
+        {% else %}
+        <div class="ts-form-group">
+          <label class="ts-label flex items-center gap-2">
+            {{ form.is_active }} Account active
+          </label>
+          <p class="ts-field-hint">Unchecking this prevents the user from logging in.</p>
+          {% if form.is_active.errors %}<p class="ts-field-error">{{ form.is_active.errors.0 }}</p>{% endif %}
+        </div>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+        <div class="ts-alert ts-alert-error">
+          <i data-lucide="x-circle" class="w-4 h-4 flex-shrink-0"></i>
+          <span class="text-sm">{{ form.non_field_errors.0 }}</span>
+        </div>
+        {% endif %}
+
+        <div class="flex items-center gap-3 pt-2">
+          <button type="submit" class="ts-btn ts-btn-primary">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            {% if target_user %}Save Changes{% else %}Create User{% endif %}
+          </button>
+          <a href="{% url 'admin_user_list' %}" class="ts-btn ts-btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

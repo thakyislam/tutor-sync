@@ -1,0 +1,209 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TutorSync — Tutor Management Platform</title>
+
+  <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { DEFAULT:'#2563EB', 100:'#DBEAFE', 600:'#2563EB', 700:'#1D4ED8', 800:'#1E40AF' },
+            accent:  { DEFAULT:'#7C3AED', 100:'#EDE9FE', 600:'#7C3AED', 700:'#6D28D9' },
+            ink:     { DEFAULT:'#0F1B33', soft:'#1E293B', muted:'#475569', subtle:'#64748B' },
+          },
+          fontFamily: { sans: ['"Space Grotesk"', 'system-ui', 'sans-serif'] },
+          backgroundImage: { 'gradient-brand': 'linear-gradient(135deg, #2563EB, #7C3AED)' },
+          animation: { 'fade-in': 'fadeIn .3s ease-out', 'slide-up': 'slideUp .4s ease-out' },
+          keyframes: {
+            fadeIn:  { from:{ opacity:'0' }, to:{ opacity:'1' } },
+            slideUp: { from:{ opacity:'0', transform:'translateY(16px)' }, to:{ opacity:'1', transform:'translateY(0)' } },
+          },
+        },
+      },
+    }
+  </script>
+
+  <link rel="stylesheet" href="{% static 'css/design-tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body class="font-sans antialiased" style="background:var(--color-surface-1);color:var(--color-ink)">
+
+  {# ── Navbar ──────────────────────────────────────────────────── #}
+  <nav class="sticky top-0 z-50 border-b" style="background:rgba(255,255,255,0.92);backdrop-filter:blur(12px);border-color:var(--color-border)">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+
+      {# Logo #}
+      <a href="{% url 'home' %}" class="inline-flex items-center gap-2.5 no-underline" aria-label="TutorSync home">
+        <svg width="32" height="32" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="nav-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#7C3AED"/>
+            </linearGradient>
+          </defs>
+          <path d="M24 16C18.5 11.8 11.5 10.8 5.5 12.6C4.6 12.9 4 13.7 4 14.6V35.2C4 36.5 5.2 37.4 6.4 37.1C11.6 35.8 17.8 36.8 24 41V16Z" fill="url(#nav-grad)" opacity="0.9"/>
+          <path d="M24 16C29.5 11.8 36.5 10.8 42.5 12.6C43.4 12.9 44 13.7 44 14.6V35.2C44 36.5 42.8 37.4 41.6 37.1C36.4 35.8 30.2 36.8 24 41V16Z" fill="#7C3AED"/>
+          <circle cx="24" cy="9" r="4.4" fill="#2563EB"/>
+          <rect x="22.6" y="12" width="2.8" height="5" rx="1.4" fill="#0F1B33" opacity="0.25"/>
+        </svg>
+        <span class="ts-logo-wordmark text-lg">
+          <span class="ts-tutor">Tutor</span><span class="ts-sync">Sync</span>
+        </span>
+      </a>
+
+      {# Nav links #}
+      <div class="flex items-center gap-3">
+        <a href="{% url 'tutor_apply' %}" class="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg transition-colors"
+           style="color:var(--color-ink-muted)" onmouseover="this.style.color='var(--color-ink)';this.style.background='var(--color-surface-2)'" onmouseout="this.style.color='var(--color-ink-muted)';this.style.background='transparent'">
+          <i data-lucide="file-text" class="w-4 h-4"></i>
+          Apply
+        </a>
+        <a href="{% url 'register' %}" class="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium px-3 py-2 rounded-lg transition-colors"
+           style="color:var(--color-ink-muted)" onmouseover="this.style.color='var(--color-ink)';this.style.background='var(--color-surface-2)'" onmouseout="this.style.color='var(--color-ink-muted)';this.style.background='transparent'">
+          <i data-lucide="user-plus" class="w-4 h-4"></i>
+          Register
+        </a>
+        <a href="{% url 'login' %}" class="ts-btn ts-btn-primary">
+          <i data-lucide="log-in" class="w-4 h-4"></i>
+          Sign In
+        </a>
+      </div>
+
+    </div>
+  </nav>
+
+  {# ── Hero ────────────────────────────────────────────────────── #}
+  <section class="relative overflow-hidden py-24 md:py-32">
+    {# Gradient blob bg #}
+    <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div class="absolute -top-40 -right-40 w-96 h-96 rounded-full opacity-10" style="background:var(--gradient-brand);filter:blur(80px)"></div>
+      <div class="absolute -bottom-20 -left-20 w-80 h-80 rounded-full opacity-8" style="background:linear-gradient(135deg,#7C3AED,#2563EB);filter:blur(60px)"></div>
+    </div>
+
+    <div class="relative max-w-3xl mx-auto px-6 text-center animate-slide-up">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-6"
+           style="background:var(--color-primary-100);color:var(--color-primary)">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+        Tutor Management Platform
+      </div>
+
+      <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-5 leading-tight" style="color:var(--color-ink)">
+        Connect tutors, guardians,
+        <br class="hidden sm:block">
+        and <span style="background:var(--gradient-brand);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">learning requests</span>
+      </h1>
+
+      <p class="text-lg mb-10" style="color:var(--color-ink-muted);max-width:36rem;margin-left:auto;margin-right:auto">
+        TutorSync replaces spreadsheets with a unified platform — manage applications, match tutors, and track every request in one place.
+      </p>
+
+      {# Primary CTAs #}
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="{% url 'login' %}" class="ts-btn ts-btn-primary ts-btn-lg w-full sm:w-auto">
+          <i data-lucide="log-in" class="w-5 h-5"></i>
+          Sign In
+        </a>
+        <a href="{% url 'register' %}" class="ts-btn ts-btn-outline ts-btn-lg w-full sm:w-auto">
+          <i data-lucide="user-plus" class="w-5 h-5"></i>
+          Create Account
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {# ── Action Cards ────────────────────────────────────────────── #}
+  <section class="max-w-5xl mx-auto px-6 pb-24 animate-fade-in">
+    <div class="grid md:grid-cols-3 gap-6">
+
+      {# Login card #}
+      <a href="{% url 'login' %}" class="group ts-card p-8 flex flex-col items-start gap-4 no-underline transition-all hover:-translate-y-1"
+         style="cursor:pointer">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:var(--color-primary-100)">
+          <i data-lucide="log-in" class="w-6 h-6" style="color:var(--color-primary)"></i>
+        </div>
+        <div>
+          <h2 class="text-base font-semibold mb-1" style="color:var(--color-ink)">Sign In</h2>
+          <p class="text-sm leading-relaxed" style="color:var(--color-ink-muted)">
+            Access your dashboard — manage requests, view applications, and update your profile.
+          </p>
+        </div>
+        <span class="mt-auto inline-flex items-center gap-1.5 text-sm font-medium" style="color:var(--color-primary)">
+          Go to login <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1"></i>
+        </span>
+      </a>
+
+      {# Register card #}
+      <a href="{% url 'register' %}" class="group ts-card p-8 flex flex-col items-start gap-4 no-underline transition-all hover:-translate-y-1"
+         style="cursor:pointer">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:var(--color-accent-100)">
+          <i data-lucide="user-plus" class="w-6 h-6" style="color:var(--color-accent)"></i>
+        </div>
+        <div>
+          <h2 class="text-base font-semibold mb-1" style="color:var(--color-ink)">Create Account</h2>
+          <p class="text-sm leading-relaxed" style="color:var(--color-ink-muted)">
+            New to TutorSync? Register as a guardian to post tutor requests for your students.
+          </p>
+        </div>
+        <span class="mt-auto inline-flex items-center gap-1.5 text-sm font-medium" style="color:var(--color-accent)">
+          Register now <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1"></i>
+        </span>
+      </a>
+
+      {# Apply card #}
+      <a href="{% url 'tutor_apply' %}" class="group ts-card p-8 flex flex-col items-start gap-4 no-underline transition-all hover:-translate-y-1"
+         style="cursor:pointer">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#DBEAFE,#EDE9FE)">
+          <i data-lucide="file-text" class="w-6 h-6" style="color:#4F46E5"></i>
+        </div>
+        <div>
+          <h2 class="text-base font-semibold mb-1" style="color:var(--color-ink)">Apply as Tutor</h2>
+          <p class="text-sm leading-relaxed" style="color:var(--color-ink-muted)">
+            Interested in tutoring? Submit your application and our team will review your profile.
+          </p>
+        </div>
+        <span class="mt-auto inline-flex items-center gap-1.5 text-sm font-medium" style="color:#4F46E5">
+          Start application <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1"></i>
+        </span>
+      </a>
+
+    </div>
+  </section>
+
+  {# ── Footer ──────────────────────────────────────────────────── #}
+  <footer class="border-t py-8" style="border-color:var(--color-border)">
+    <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <a href="{% url 'home' %}" class="inline-flex items-center gap-2 no-underline opacity-60 hover:opacity-100 transition-opacity">
+        <svg width="20" height="20" viewBox="0 0 48 48" fill="none">
+          <defs>
+            <linearGradient id="ft-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#7C3AED"/>
+            </linearGradient>
+          </defs>
+          <path d="M24 16C18.5 11.8 11.5 10.8 5.5 12.6C4.6 12.9 4 13.7 4 14.6V35.2C4 36.5 5.2 37.4 6.4 37.1C11.6 35.8 17.8 36.8 24 41V16Z" fill="url(#ft-grad)" opacity="0.9"/>
+          <path d="M24 16C29.5 11.8 36.5 10.8 42.5 12.6C43.4 12.9 44 13.7 44 14.6V35.2C44 36.5 42.8 37.4 41.6 37.1C36.4 35.8 30.2 36.8 24 41V16Z" fill="#7C3AED"/>
+          <circle cx="24" cy="9" r="4.4" fill="#2563EB"/>
+        </svg>
+        <span class="ts-logo-wordmark text-sm">
+          <span class="ts-tutor">Tutor</span><span class="ts-sync">Sync</span>
+        </span>
+      </a>
+      <p class="text-xs" style="color:var(--color-ink-subtle)">
+        &copy; {% now "Y" %} TutorSync. All rights reserved.
+      </p>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>

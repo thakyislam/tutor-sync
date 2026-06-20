@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}{{ application.full_name }} — Application{% endblock %}
+
+{% block content %}
+<div class="space-y-6 max-w-5xl">
+
+  {# Breadcrumb #}
+  <nav class="flex items-center gap-2 text-sm" style="color:var(--color-ink-muted)">
+    <a href="{% url 'application_list' %}" style="color:var(--color-primary)">Applications</a>
+    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+    <span style="color:var(--color-ink)">{{ application.full_name }}</span>
+  </nav>
+
+  {# Header #}
+  <div class="flex items-start justify-between gap-4 flex-wrap">
+    <div>
+      <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">{{ application.full_name }}</h1>
+      <p class="text-sm mt-1" style="color:var(--color-ink-muted)">Submitted {{ application.submitted_at|date:"M j, Y" }}</p>
+    </div>
+    <div class="flex items-center gap-2 flex-wrap">
+      {% include "components/badge.html" with status=application.status label=application.get_status_display %}
+      {% if application.status == 'approved' %}
+      <form method="post" action="{% url 'approve_to_tutor' application.pk %}"
+            onsubmit="return confirm('Create a tutor account for {{ application.full_name }}? This cannot be undone.')">
+        {% csrf_token %}
+        <button type="submit" class="ts-btn ts-btn-primary">
+          <i data-lucide="user-check" class="w-4 h-4"></i>
+          Activate Tutor Account
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Flash messages #}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="ts-alert ts-alert-{% if message.tags == 'error' %}error{% else %}success{% endif %} animate-fade-in">
+    <i data-lucide="{% if message.tags == 'error' %}x-circle{% else %}check-circle{% endif %}" class="w-4 h-4 flex-shrink-0"></i>
+    <span class="text-sm">{{ message }}</span>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    {# Left: applicant info #}
+    <div class="lg:col-span-2 space-y-4">
+
+      {# Contact #}
+      <div class="ts-card">
+        <div class="px-5 py-3 border-b" style="border-color:var(--color-border)">
+          <h2 class="font-semibold text-sm" style="color:var(--color-ink)">Contact Information</h2>
+        </div>
+        <div class="ts-card-body space-y-3">
+          <div class="flex items-center gap-2.5 text-sm">
+            <i data-lucide="mail" class="w-4 h-4 flex-shrink-0" style="color:var(--color-ink-faint)"></i>
+            <span style="color:var(--color-ink-soft)">{{ application.email }}</span>
+          </div>
+          <div class="flex items-center gap-2.5 text-sm">
+            <i data-lucide="phone" class="w-4 h-4 flex-shrink-0" style="color:var(--color-ink-faint)"></i>
+            <span style="color:var(--color-ink-soft)">{{ application.phone }}</span>
+          </div>
+          {% if application.subjects.exists %}
+          <div class="flex items-start gap-2.5 text-sm">
+            <i data-lucide="book-open" class="w-4 h-4 flex-shrink-0 mt-0.5" style="color:var(--color-ink-faint)"></i>
+            <div class="flex flex-wrap gap-1">
+              {% for subject in application.subjects.all %}
+              <span class="ts-badge ts-badge-closed">{{ subject.name }}</span>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      {# Education #}
+      <div class="ts-card">
+        <div class="px-5 py-3 border-b" style="border-color:var(--color-border)">
+          <h2 class="font-semibold text-sm" style="color:var(--color-ink)">Education</h2>
+        </div>
+        <div class="ts-card-body">
+          <p class="text-sm leading-relaxed whitespace-pre-wrap" style="color:var(--color-ink-soft)">{{ application.education }}</p>
+        </div>
+      </div>
+
+      {# Experience #}
+      <div class="ts-card">
+        <div class="px-5 py-3 border-b" style="border-color:var(--color-border)">
+          <h2 class="font-semibold text-sm" style="color:var(--color-ink)">Experience</h2>
+        </div>
+        <div class="ts-card-body">
+          <p class="text-sm leading-relaxed whitespace-pre-wrap" style="color:var(--color-ink-soft)">{{ application.experience }}</p>
+        </div>
+      </div>
+
+      {# Documents #}
+      <div class="ts-card">
+        <div class="px-5 py-3 border-b" style="border-color:var(--color-border)">
+          <h2 class="font-semibold text-sm" style="color:var(--color-ink)">Documents</h2>
+        </div>
+        <div class="ts-card-body space-y-2">
+          {% if application.resume %}
+          <a href="{{ application.resume.url }}" target="_blank" rel="noopener"
+             class="ts-btn ts-btn-secondary w-full" style="justify-content:flex-start">
+            <i data-lucide="file-text" class="w-4 h-4"></i>
+            Download Resume / CV
+            <i data-lucide="external-link" class="w-3.5 h-3.5 ml-auto"></i>
+          </a>
+          {% endif %}
+          {% if application.id_document %}
+          <a href="{{ application.id_document.url }}" target="_blank" rel="noopener"
+             class="ts-btn ts-btn-secondary w-full" style="justify-content:flex-start">
+            <i data-lucide="id-card" class="w-4 h-4"></i>
+            Download ID Document
+            <i data-lucide="external-link" class="w-3.5 h-3.5 ml-auto"></i>
+          </a>
+          {% else %}
+          <p class="text-sm" style="color:var(--color-ink-faint)">No ID document uploaded</p>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+    {# Right: review form + audit #}
+    <div class="space-y-4">
+
+      <div class="ts-card">
+        <div class="px-5 py-3 border-b" style="border-color:var(--color-border)">
+          <h2 class="font-semibold text-sm" style="color:var(--color-ink)">Review</h2>
+        </div>
+        <div class="ts-card-body">
+          <form method="post" class="space-y-4">
+            {% csrf_token %}
+
+            <div class="ts-form-group">
+              <label class="ts-label" for="{{ form.status.id_for_label }}">Status</label>
+              {{ form.status }}
+              {% if form.status.errors %}
+              <p class="ts-field-error">{{ form.status.errors.0 }}</p>
+              {% endif %}
+            </div>
+
+            <div class="ts-form-group">
+              <label class="ts-label" for="{{ form.reviewer_notes.id_for_label }}">Notes</label>
+              {{ form.reviewer_notes }}
+              {% if form.reviewer_notes.errors %}
+              <p class="ts-field-error">{{ form.reviewer_notes.errors.0 }}</p>
+              {% endif %}
+            </div>
+
+            <button type="submit" class="ts-btn ts-btn-primary w-full">
+              <i data-lucide="save" class="w-4 h-4"></i>
+              Save Review
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {% if application.reviewed_by %}
+      <div class="ts-card ts-card-body space-y-1">
+        <p class="text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Last reviewed by</p>
+        <p class="text-sm font-medium" style="color:var(--color-ink)">
+          {{ application.reviewed_by.get_full_name|default:application.reviewed_by.username }}
+        </p>
+        <p class="text-xs" style="color:var(--color-ink-faint)">{{ application.updated_at|date:"M j, Y H:i" }}</p>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}

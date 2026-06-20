@@ -1,0 +1,28 @@
+{% extends "base_auth.html" %}
+{% block title %}Application Submitted{% endblock %}
+
+{% block auth_content %}
+<div class="text-center space-y-4">
+  <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl mx-auto bg-green-50">
+    <i data-lucide="check-circle" class="w-8 h-8 text-green-500"></i>
+  </div>
+
+  <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">
+    Application Submitted!
+  </h1>
+  <p class="text-sm" style="color:var(--color-ink-muted)">
+    Thank you for applying to TutorSync. Our team will review your application and
+    be in touch within a few business days.
+  </p>
+
+  <a href="{% url 'login' %}" class="ts-btn ts-btn-primary ts-btn-lg w-full mt-4"
+     style="display:flex;justify-content:center;align-items:center;gap:.5rem">
+    <i data-lucide="log-in" class="w-4 h-4"></i>
+    Sign in to an existing account
+  </a>
+  <a href="{% url 'tutor_apply' %}" class="ts-btn ts-btn-ghost w-full"
+     style="display:flex;justify-content:center;align-items:center;gap:.5rem">
+    Submit another application
+  </a>
+</div>
+{% endblock %}

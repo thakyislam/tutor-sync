@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}{{ tutor.user.get_full_name|default:tutor.user.username }} — Tutor Profile{% endblock %}
+
+{% block content %}
+<div class="space-y-6 max-w-4xl">
+
+  <nav class="flex items-center gap-2 text-sm" style="color:var(--color-ink-muted)">
+    <a href="{% url 'tutor_list' %}" style="color:var(--color-primary)">Tutors</a>
+    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+    <span style="color:var(--color-ink)">{{ tutor.user.get_full_name|default:tutor.user.username }}</span>
+  </nav>
+
+  <div class="flex items-start justify-between gap-4 flex-wrap">
+    <div class="flex items-center gap-4">
+      <div class="ts-avatar ts-avatar-lg text-xl">
+        {{ tutor.user.get_full_name|first|default:tutor.user.username|first|upper }}
+      </div>
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight" style="color:var(--color-ink)">
+          {{ tutor.user.get_full_name|default:tutor.user.username }}
+        </h1>
+        <div class="flex items-center gap-2 mt-1">
+          {% include "components/badge.html" with status=tutor.status label=tutor.get_status_display %}
+          {% if tutor.verified %}
+          <span class="ts-badge ts-badge-matched">
+            <i data-lucide="shield-check" class="w-3 h-3 mr-0.5"></i>Verified
+          </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% if can_edit %}
+    <a href="{% url 'tutor_edit' tutor.pk %}" class="ts-btn ts-btn-secondary">
+      <i data-lucide="pencil" class="w-4 h-4"></i>
+      Edit Profile
+    </a>
+    {% endif %}
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <div class="lg:col-span-2 space-y-4">
+
+      {% if tutor.bio %}
+      <div class="ts-card">
+        <div class="px-5 py-3 border-b" style="border-color:var(--color-border)">
+          <h2 class="font-semibold text-sm" style="color:var(--color-ink)">About</h2>
+        </div>
+        <div class="ts-card-body">
+          <p class="text-sm leading-relaxed whitespace-pre-wrap" style="color:var(--color-ink-soft)">{{ tutor.bio }}</p>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="ts-card">
+        <div class="px-5 py-3 border-b" style="border-color:var(--color-border)">
+          <h2 class="font-semibold text-sm" style="color:var(--color-ink)">Subjects</h2>
+        </div>
+        <div class="ts-card-body">
+          {% if tutor.subjects.exists %}
+          <div class="flex flex-wrap gap-2">
+            {% for subj in tutor.subjects.all %}
+            <span class="ts-badge ts-badge-closed text-sm px-3 py-1">{{ subj.name }}</span>
+            {% endfor %}
+          </div>
+          {% else %}
+          <p class="text-sm" style="color:var(--color-ink-faint)">No subjects listed.</p>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="space-y-4">
+
+      <div class="ts-card ts-card-body space-y-3">
+        <h2 class="font-semibold text-sm" style="color:var(--color-ink)">Details</h2>
+        <div class="space-y-2 text-sm">
+          <div class="flex items-center gap-2">
+            <i data-lucide="mail" class="w-4 h-4 flex-shrink-0" style="color:var(--color-ink-faint)"></i>
+            <span style="color:var(--color-ink-soft)">{{ tutor.user.email }}</span>
+          </div>
+          {% if tutor.education_level %}
+          <div class="flex items-center gap-2">
+            <i data-lucide="graduation-cap" class="w-4 h-4 flex-shrink-0" style="color:var(--color-ink-faint)"></i>
+            <span style="color:var(--color-ink-soft)">{{ tutor.education_level }}</span>
+          </div>
+          {% endif %}
+          <div class="flex items-center gap-2">
+            <i data-lucide="clock" class="w-4 h-4 flex-shrink-0" style="color:var(--color-ink-faint)"></i>
+            <span style="color:var(--color-ink-soft)">{{ tutor.experience_yrs }} year{{ tutor.experience_yrs|pluralize }} experience</span>
+          </div>
+          {% if tutor.hourly_rate %}
+          <div class="flex items-center gap-2">
+            <i data-lucide="dollar-sign" class="w-4 h-4 flex-shrink-0" style="color:var(--color-ink-faint)"></i>
+            <span style="color:var(--color-ink-soft)">${{ tutor.hourly_rate }}/hr</span>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if is_admin %}
+      <div class="ts-card ts-card-body space-y-1">
+        <p class="text-xs font-semibold uppercase tracking-wider" style="color:var(--color-ink-faint)">Admin info</p>
+        <p class="text-sm" style="color:var(--color-ink-soft)">Joined {{ tutor.created_at|date:"M j, Y" }}</p>
+        <p class="text-sm" style="color:var(--color-ink-soft)">Rating: {{ tutor.rating }}</p>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}

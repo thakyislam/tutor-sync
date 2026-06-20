@@ -425,6 +425,51 @@
     padding: var(--space-4) var(--space-6) var(--space-1);
   }
 
+  /* ── Collapsed Sidebar State ─────────────────────────────── */
+  .ts-sidebar.collapsed .ts-nav-section-label {
+    display: none;
+  }
+
+  .ts-sidebar.collapsed .nav-label {
+    display: none;
+  }
+
+  .ts-sidebar.collapsed .ts-nav-item {
+    justify-content: center;
+    padding: var(--space-2-5) 0;
+    margin: var(--space-0-5) var(--space-2);
+  }
+
+  .ts-sidebar.collapsed .ts-sidebar-header {
+    padding: 0 var(--space-3);
+    justify-content: center;
+  }
+
+  .ts-sidebar.collapsed .ts-sidebar-header > a {
+    display: none;
+  }
+
+  .ts-sidebar.collapsed .ts-sidebar-header #ts-sidebar-toggle {
+    margin-left: 0;
+  }
+
+  .ts-sidebar.collapsed .ts-sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-3) var(--space-2);
+  }
+
+  .ts-sidebar.collapsed .ts-sidebar-footer > .flex {
+    justify-content: center;
+  }
+
+  .ts-sidebar.collapsed .ts-sidebar-logout {
+    width: 36px;
+    padding: var(--space-2);
+    justify-content: center;
+  }
+
   /* ── Tables ──────────────────────────────────────────────── */
   .ts-table-wrapper {
     overflow-x: auto;
@@ -751,6 +796,37 @@
     background: var(--gradient-brand);
     border-radius: var(--radius-full);
   }
+
+  /* ── Mobile Overlay ──────────────────────────────────────── */
+  .ts-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: calc(var(--z-sticky) - 1);
+    backdrop-filter: blur(2px);
+  }
+
+  .ts-sidebar-overlay.visible {
+    display: block;
+  }
+
+  /* ── Mobile hamburger (topbar) ───────────────────────────── */
+  .ts-mobile-menu-btn {
+    display: none;
+  }
+
+  /* ── File Input Styling ──────────────────────────────────── */
+  .ts-file {
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    color: var(--color-ink);
+    background: white;
+  }
 }
 
 /* ── Utility Layer ───────────────────────────────────────── */
@@ -784,5 +860,42 @@
 
   .tracking-tight {
     letter-spacing: var(--letter-spacing-tight);
+  }
+}
+
+/* ── Mobile Responsive (≤ 640px) ─────────────────────────── */
+@media (max-width: 640px) {
+  .ts-sidebar {
+    transform: translateX(-100%);
+    z-index: var(--z-overlay);
+    width: var(--sidebar-width);
+  }
+
+  .ts-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .ts-sidebar.collapsed {
+    width: var(--sidebar-width);
+  }
+
+  .ts-main {
+    margin-left: 0;
+  }
+
+  .ts-main.sidebar-collapsed {
+    margin-left: 0;
+  }
+
+  .ts-mobile-menu-btn {
+    display: inline-flex;
+  }
+
+  .ts-content {
+    padding: var(--space-4);
+  }
+
+  .ts-topbar {
+    padding: 0 var(--space-4);
   }
 }

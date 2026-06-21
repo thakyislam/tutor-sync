@@ -16,12 +16,12 @@ def home_view(request):
 
 urlpatterns = [
     path('', home_view, name='home'),
-    path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('', include('dashboard.urls')),
     path('', include('tutors.urls')),
     path('', include('guardians.urls')),
     path('', include('requests.urls')),
+    path('admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:

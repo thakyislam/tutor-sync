@@ -64,7 +64,7 @@ def guardian_add(request):
     if request.method == 'POST' and form.is_valid():
         user = form.save()
         messages.success(request, f'Guardian account created for {user.get_full_name() or user.username}.')
-        return redirect('guardian_detail', pk=user.guardianprofile.pk)
+        return redirect('guardian_detail_admin', pk=user.guardianprofile.pk)
     return render(request, 'guardians/guardian_add.html', {'form': form})
 
 
@@ -80,6 +80,20 @@ def student_add(request):
         form.save_m2m()
         return redirect('dashboard')
     return render(request, 'guardians/student_form.html', {'form': form, 'student': None})
+
+
+@role_required('admin')
+def admin_student_add(request, guardian_pk):
+    profile = get_object_or_404(GuardianProfile, pk=guardian_pk)
+    form = StudentForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        student = form.save(commit=False)
+        student.guardian = profile
+        student.save()
+        form.save_m2m()
+        messages.success(request, f'Student "{student.name}" added to {profile.user.get_full_name() or profile.user.username}.')
+        return redirect('guardian_detail_admin', pk=guardian_pk)
+    return render(request, 'guardians/student_form.html', {'form': form, 'student': None, 'guardian': profile})
 
 
 @role_required('guardian')

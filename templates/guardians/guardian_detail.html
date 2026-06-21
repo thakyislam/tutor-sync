@@ -78,6 +78,10 @@
       <div class="ts-card">
         <div class="ts-card-header">
           <h2 class="font-semibold" style="color:var(--color-ink)">Students ({{ students.count }})</h2>
+          <a href="{% url 'admin_student_add' guardian_pk=profile.pk %}" class="ts-btn ts-btn-sm ts-btn-primary">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            Add Student
+          </a>
         </div>
         <div class="ts-card-body">
           {% if students %}

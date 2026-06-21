@@ -1,6 +1,4 @@
-{# Pagination component — expects Django Paginator page object as `page_obj`
-   Usage: {% include "components/pagination.html" with page_obj=page_obj %}
-#}
+{# Pagination component — expects page_obj from Django Paginator #}
 {% if page_obj.has_other_pages %}
 <div class="flex items-center justify-between mt-6 flex-wrap gap-4">
   <p class="text-sm" style="color:var(--color-ink-subtle)">
